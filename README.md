@@ -1,4 +1,4 @@
-# SPIDriver
+![logo](/images/logo.png)
 
 SPIDriver is a tool for controlling any SPI device from yout PC's USB port.
 It connects as a standard USB serial device, so there are no drivers to install.
@@ -10,17 +10,18 @@ and there are included drivers for
 * Python 2 and 3
 * Windows/Mac/Linux C/C++
 
-![flashexample](/images/DSC_1313a.JPG)
+![front](/images/DSC_1313a.JPG)
 
 Features:
 
 * live display shows you exactly what it's doing all the time
 * sustained SPI transfers at 500 Kbps
 * USB line voltage monitor to detect supply problems
+* temperature sensor
 * target device current measurement
 * two auxiliary control lines, A and B
+* dedicated power out lines. 2 each of GND, 3.3 V and 5 V. Up to 500 mA total
 * signals color coded to match jumper colors
-* temperature sensor
 * all sensors and signals controlled by serial port
 
 ![flashexample](/images/DSC_1319a.JPG)
@@ -34,4 +35,4 @@ For example to read the 3-byte ID from this serial flash:
     [239, 64, 24]
     >>>
 
-![flashexample](/images/DSC_1319b.JPG)
+![flashexample2](/images/DSC_1319b.JPG)

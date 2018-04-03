@@ -1,6 +1,6 @@
 ![logo](/images/logo.png)
 
-SPIDriver is a tool for controlling any SPI device from yout PC's USB port.
+SPIDriver is a tool for controlling any SPI device from your PC's USB port.
 It connects as a standard USB serial device, so there are no drivers to install.
 The serial protocol is so simple it fits on the [back of the PCB](/images/DSC_1315a.JPG),
 and there are included drivers for
@@ -17,22 +17,25 @@ Features:
 * live display shows you exactly what it's doing all the time
 * sustained SPI transfers at 500 Kbps
 * USB line voltage monitor to detect supply problems
-* temperature sensor
 * target device current measurement
 * two auxiliary control lines, A and B
 * dedicated power out lines. 2 each of GND, 3.3 V and 5 V. Up to 500 mA total
 * signals color coded to match jumper colors
-* all sensors and signals controlled by serial port
+* all signals are 3.3 V, and are 5 V tolerant
+* uses an FTDI USB serial adapter, and Silicon Labs automotive-grade microcontroller
+* temperature sensor
+* all sensors and signals controlled over serial
 
 ![flashexample](/images/DSC_1319a.JPG)
 
 For example to read the 3-byte ID from this serial flash:
 
     >>> s = SpiDriver()
-    >>> s.sel()
-    >>> s.write(b'\x9f')
-    >>> list(s.read(3))
+    >>> s.sel()               # start command
+    >>> s.write(b'\x9f')      # command 9F is READ JEDEC ID 
+    >>> list(s.read(3))       # read next 3 bytes
     [239, 64, 24]
+    >>> s.unsel()             # end command
     >>>
 
 ![flashexample2](/images/DSC_1319b.JPG)

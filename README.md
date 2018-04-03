@@ -2,7 +2,7 @@
 
 SPIDriver is a tool for controlling any SPI device from yout PC's USB port.
 It connects as a standard USB serial device, so there are no drivers to install.
-The serial protocol is simple it fits on the back of the device,
+The serial protocol is simple it fits on the [back of the PCB](/images/DSC_1315a.JPG),
 and there are included drivers for:
 
 * Windows/Mac/Linux GUI

@@ -23,7 +23,7 @@ Features:
 * signals color coded to match jumper colors
 * all signals are 3.3 V, and are 5 V tolerant
 * uses an FTDI USB serial adapter, and Silicon Labs automotive-grade microcontroller
-* temperature sensor
+* also reports uptime, temperature and running CRC of all traffic
 * all sensors and signals controlled over serial
 
 ![flashexample](/images/DSC_1319a.JPG)

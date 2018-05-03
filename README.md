@@ -28,7 +28,7 @@ Features:
 
 ![flashexample](/images/DSC_1319a.JPG)
 
-For example to read the 3-byte ID from this serial flash:
+For example to read the 3-byte ID from this serial flash in Python:
 
     >>> s = SpiDriver()
     >>> s.sel()               # start command
@@ -37,5 +37,11 @@ For example to read the 3-byte ID from this serial flash:
     [239, 64, 24]
     >>> s.unsel()             # end command
     >>>
+
+or using the command-line tool:
+
+    $ spi s t 0x9f r 3 u
+    0xef,0x40,0x18
+    $
 
 ![flashexample2](/images/DSC_1319b.JPG)

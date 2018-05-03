@@ -123,7 +123,7 @@ int openSerialPort(const char *portname)
 
   cfsetispeed(&Settings, B460800);
   cfsetospeed(&Settings, B460800);
-
+#if 0
   Settings.c_cflag &= ~PARENB;
   Settings.c_cflag &= ~CSTOPB;
   Settings.c_cflag &= ~CSIZE;
@@ -135,7 +135,9 @@ int openSerialPort(const char *portname)
   Settings.c_iflag &= ~(ICANON | ECHO | ECHOE | ISIG);
 
   Settings.c_oflag &= ~OPOST;
-
+#else
+  cfmakeraw(&Settings);
+#endif
   Settings.c_cc[VMIN] = 1;
 
   if (tcsetattr(fd, TCSANOW, &Settings) != 0)

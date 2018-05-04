@@ -1,5 +1,7 @@
 ![logo](/images/logo.png)
 
+[![Build Status](https://travis-ci.org/jamesbowman/spidriver.svg?branch=master)](https://travis-ci.org/jamesbowman/spidriver)
+
 SPIDriver is a tool for controlling any SPI device from your PC's USB port.
 It connects as a standard USB serial device, so there are no drivers to install.
 The serial protocol is so simple it fits on the [back of the PCB](/images/DSC_1315a.JPG),
@@ -38,7 +40,7 @@ For example to read the 3-byte ID from this serial flash in Python:
     >>> s.unsel()             # end command
     >>>
 
-or using the command-line tool:
+or using the command line:
 
     $ spi s t 0x9f r 3 u
     0xef,0x40,0x18

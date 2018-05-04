@@ -1,6 +1,8 @@
 import sys
 import serial
 
+__version__ = '0.0.1'
+
 PYTHON2 = (sys.version_info < (3, 0))
 
 class SPIDriver:

@@ -113,33 +113,18 @@ void closeSerialPort(HANDLE hSerial)
 
 int openSerialPort(const char *portname)
 {
-  int fd = open(portname, O_RDWR | O_NOCTTY);
+  struct termios Settings;
+  int fd;
+  
+  fd = open(portname, O_RDWR | O_NOCTTY);
   if (fd == -1)
     perror(portname);
 
-  struct termios Settings;
-
   tcgetattr(fd, &Settings);
-
   cfsetispeed(&Settings, B460800);
   cfsetospeed(&Settings, B460800);
-#if 0
-  Settings.c_cflag &= ~PARENB;
-  Settings.c_cflag &= ~CSTOPB;
-  Settings.c_cflag &= ~CSIZE;
-  Settings.c_cflag &= ~CRTSCTS;
-  Settings.c_cflag |=  CS8;
-  Settings.c_cflag |=  CREAD | CLOCAL;
-
-  Settings.c_iflag &= ~(IXON | IXOFF | IXANY);
-  Settings.c_iflag &= ~(ICANON | ECHO | ECHOE | ISIG);
-
-  Settings.c_oflag &= ~OPOST;
-#else
   cfmakeraw(&Settings);
-#endif
   Settings.c_cc[VMIN] = 1;
-
   if (tcsetattr(fd, TCSANOW, &Settings) != 0)
     perror("Serial settings");
 

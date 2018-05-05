@@ -6,7 +6,7 @@ from spidriver import SPIDriver
 
 if __name__ == '__main__':
     s = SPIDriver()
-    L = 110
+    L = 300
 
     blanking = [0] * ((L + 31) // 32)
     d = [0x80,0x80,0x80] * L

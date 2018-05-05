@@ -81,6 +81,17 @@ class SPIDriver:
             self.__ser_w([0xc0 + len(sub) - 1])
             self.__ser_w(sub)
 
+    def writeread(self, bb):
+        """ Write bb to the SPI device, return the read bytes """
+        r = []
+        ST = 64
+        for i in range(0, len(bb), ST):
+            sub = bb[i:i + 64]
+            self.__ser_w([0x80 + len(sub) - 1])
+            self.__ser_w(sub)
+            r.append(self.ser.read(len(sub)))
+        return b''.join(r)
+
     def seta(self, v):
         """ Set the A signal to 0 or 1 """
         self.__ser_w([ord('a'), v])

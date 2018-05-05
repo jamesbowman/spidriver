@@ -2,3 +2,6 @@ cd python
 python setup.py install
 cd ..
 python -c 'from spidriver import SPIDriver' 
+
+cd c
+make -f linux/Makefile

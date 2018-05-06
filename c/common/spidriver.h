@@ -18,7 +18,9 @@ typedef struct {
             current_ma,   // device current (mA)
             temp_celsius; // temperature (C)
   unsigned int a, b, cs;  // state of three output lines
-  unsigned int debug;
+  unsigned int
+            ccitt_crc,    // Hardware CCITT CRC
+            e_ccitt_crc;  // Host CCITT CRC, should match
 } SPIDriver;
 
 void spi_connect(SPIDriver *sd, const char* portname);

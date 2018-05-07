@@ -2,6 +2,8 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib
 
+import struct
+
 from spidriver import SPIDriver
 
 def ison(button): return button.get_state() == Gtk.StateType.ACTIVE
@@ -19,8 +21,6 @@ class ButtonWindow(Gtk.Window):
 
         def pair(a, b):
             r = Gtk.HBox(spacing=6)
-            a.set_justify(Gtk.Justification.LEFT)
-            b.set_justify(Gtk.Justification.RIGHT)
             r.pack_start(a, False, True, 0)
             r.pack_end(b, False, True, 0)
             return r
@@ -37,7 +37,7 @@ class ButtonWindow(Gtk.Window):
 
         def hbox(items):
             r = Gtk.HBox(spacing=6)
-            [r.pack_start(i, True, True, 0) for i in items]
+            [r.pack_start(i, False, True, 0) for i in items]
             return r
 
         def checkbutton(name, state, click):
@@ -46,9 +46,21 @@ class ButtonWindow(Gtk.Window):
             r.connect("clicked", click)
             return r
 
+        def button(name, click):
+            r = Gtk.Button(name)
+            r.connect("clicked", click)
+            return r
+
         self.label_voltage = Gtk.Label()
         self.label_current = Gtk.Label()
         self.label_temp    = Gtk.Label()
+
+        self.tx = Gtk.Entry()
+        self.tx.set_max_length(2)
+        self.tx.set_width_chars(2)
+        self.rx = Gtk.Entry()
+        self.rx.set_width_chars(20)
+
         self.add(vbox([
             pair(label("Voltage"), self.label_voltage),
             pair(label("Current"), self.label_current),
@@ -57,7 +69,15 @@ class ButtonWindow(Gtk.Window):
                 checkbutton("CS", 1 - self.sd.cs, self.click_cs),
                 checkbutton("A", self.sd.a, self.click_a),
                 checkbutton("B", self.sd.b, self.click_b),
-            ])
+            ]),
+            pair(
+                self.tx,
+                button("Send", self.send)
+            ),
+            pair(
+                self.rx,
+                button("Recv", self.click_a)
+            ),
         ]))
         self.refresh()
 
@@ -89,7 +109,7 @@ class ButtonWindow(Gtk.Window):
         self.sd.getstatus()
         self.label_voltage.set_text("%.2f V" % self.sd.voltage)
         self.label_current.set_text("%d mA" % self.sd.current)
-        self.label_temp.set_text("%d C" % self.sd.temp)
+        self.label_temp.set_text("%.1f C" % self.sd.temp)
         return True
 
     def click_cs(self, button):
@@ -104,6 +124,13 @@ class ButtonWindow(Gtk.Window):
 
     def on_click_me_clicked(self, button):
         print("\"Click me\" button was clicked")
+
+    def send(self, _):
+        b = self.tx.get_buffer()
+        print b.get_text()
+
+        self.sd.write(struct.pack("B", int(b.get_text(), 16)))
+        b.delete_text(0, -1)
 
     def on_open_clicked(self, button):
         print("\"Open\" button was clicked")

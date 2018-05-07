@@ -105,12 +105,24 @@ class SPIDriver:
         self.ser.write(b'?')
         r = self.ser.read(80)
         body = r[1:-1].decode() # remove [ and ]
-        (self.product, self.serial, uptime, voltage, current, temp, a, b, cs, debug) = body.split()
+        (self.product,
+         self.serial,
+         uptime,
+         voltage,
+         current,
+         temp,
+         a,
+         b,
+         cs,
+         ccitt_crc) = body.split()
         self.uptime = int(uptime)
         self.voltage = float(voltage)
         self.current = float(current)
         self.temp = float(temp)
-        self.debug = int(debug, 16)
+        self.a = int(a)
+        self.b = int(b)
+        self.cs = int(cs)
+        self.ccitt_crc = int(ccitt_crc, 16)
 
     def __repr__(self):
         return "<%s serial=%s uptime=%d>" % (

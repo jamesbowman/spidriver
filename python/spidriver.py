@@ -20,7 +20,7 @@ class SPIDriver:
         cs          state of CS pin
         a           state of A pin
         b           state of B pin
-        debug       CCITT-16 CRC of all transmitted and received bytes
+        ccitt_crc   CCITT-16 CRC of all transmitted and received bytes
 
     """
     def __init__(self, port = "/dev/ttyUSB0"):

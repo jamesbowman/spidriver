@@ -4,30 +4,35 @@ from spidriver import SPIDriver
 import random
 import time
 import sys
+import os
 
 def rnd(n):
     return random.randrange(n)
 
 
 def pattern(n):
-    return bytes([rnd(256) for i in range(n)])
+    return [rnd(256) for i in range(n)]
 
 if __name__ == '__main__':
-    s = SPIDriver()
-    print(hex(s.debug))
+    if len(sys.argv) > 1:
+        s = SPIDriver(sys.argv[1])
+    else:
+        s = SPIDriver()
     # print(s)
-    t1 = time.time() + float(sys.argv[1])
-    while time.time() < t1:
-        random.choice([
-            lambda: s.seta(rnd(2)),
-            lambda: s.setb(rnd(2)),
-            lambda: s.sel(),
-            lambda: s.unsel(),
-            lambda: s.write(pattern(1 + rnd(1))),
-            lambda: s.read(1 + rnd(12)),
-            lambda: s.getstatus()
-            ])()
-        # time.sleep(.020)
+    # t1 = time.time() + float(sys.argv[2])
+    while True: # time.time() < t1:
+        for i in range(50):
+            random.choice([
+                lambda: s.seta(rnd(2)),
+                lambda: s.setb(rnd(2)),
+                lambda: s.sel(),
+                lambda: s.unsel(),
+                lambda: s.writeread(pattern(1 + rnd(1))),
+                # lambda: s.read(1 + rnd(12)),
+                # lambda: s.getstatus()
+                ])()
+        os.system("outlet.py 8 on ; outlet.py 8 off")
+        time.sleep(3)
     print(hex(s.debug))
 
     while 0:

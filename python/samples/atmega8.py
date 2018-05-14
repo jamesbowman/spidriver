@@ -17,6 +17,7 @@ def programming_enable(s):
     for i in range(10):
         pulse_reset(s)
         response = s.writeread([0xac, 0x53, 0, 0])
+        print(response)
         if response[2] == 0x53:
             return
     raise ConnectionError
@@ -59,7 +60,10 @@ if __name__ == '__main__':
     programming_enable(s)
     erase(s)
     write_page(s, 64, range(128))
+    s.detach()
+    """
     print("Fuses: %04x" % read_fuses(s))
     # Fuses d9ff
     for i in range(140):
         print("%04x: %04x" % (i, read_program_memory(s, i)))
+    """

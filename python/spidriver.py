@@ -57,6 +57,10 @@ class SPIDriver:
         else:
             return r[0]
 
+    def detach(self):
+        """ Detach all signals """
+        self.ser.write(b'x')
+
     def sel(self):
         """ Select the SPI device by asserting CS """
         self.ser.write(b's')

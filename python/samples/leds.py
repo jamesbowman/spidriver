@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
+import sys
 import colorsys
 
 from spidriver import SPIDriver
 
 if __name__ == '__main__':
-    s = SPIDriver()
+    s = SPIDriver(sys.argv[1])
     L = 300
 
     blanking = [0] * ((L + 31) // 32)

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 from spidriver import SPIDriver
 import random
@@ -14,8 +14,8 @@ def rnd(n):
     return random.randrange(n)
 
 if __name__ == '__main__':
-    s = SPIDriver()
-    t1 = time.time() + float(sys.argv[1])
+    s = SPIDriver(sys.argv[1])
+    t1 = time.time() + float(sys.argv[2])
     i = 0
     random.seed(7)
     while time.time() < t1:

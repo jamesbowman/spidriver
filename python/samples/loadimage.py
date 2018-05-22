@@ -3,6 +3,10 @@
 import sys
 from spidriver import SPIDriver
 from Eve import Eve
+import time
+
+def align4(s):
+    return s + bytes(-len(s) & 3)
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
@@ -19,5 +23,6 @@ if __name__ == '__main__':
     e.swap()
     e.finish()
 
-    e.cmd_loadimage(0, Eve.OPT_NODL)
-    e.c(open("logo480.png", "rb").read())
+    for a in sys.argv[2:]:
+        e.cmd_loadimage(0, Eve.OPT_NODL)
+        e.c(align4(open(a, "rb").read()))

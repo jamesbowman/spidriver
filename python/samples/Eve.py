@@ -1,10 +1,16 @@
+import sys
 import struct
 import time
 
 def const(x): return x
 
-def align4(s):
-    return s + bytes(-len(s) & 3)
+PYTHON2 = (sys.version_info < (3, 0))
+if PYTHON2:
+    def align4(s):
+        return s + (chr(0) * (-len(s) & 3))
+else:
+    def align4(s):
+        return s + bytes(-len(s) & 3)
 
 class CoprocessorException(Exception):
     pass
@@ -274,7 +280,10 @@ class Evebase:
     L2                   = 17
 
     def packstring(self, s):
-        return align4(bytes(s, "utf-8") + bytes(1))
+        if PYTHON2:
+            return align4(s + chr(0))
+        else:
+            return align4(bytes(s, "utf-8") + bytes(1))
 
     # Low-level drawing opcodes
 
@@ -525,6 +534,9 @@ class Evebase:
     def cmd_mediafifo(self, ptr, size):
         self.c(struct.pack("III", 0xffffff39, ptr, size))
 
+    def cmd_sync(self):
+        self.c(struct.pack("I", 0xffffff42))
+
     # def cmd_snapshot2(self,
     # def cmd_setbase(self,
     # def cmd_playvideo(self,
@@ -580,6 +592,18 @@ class Eve(Evebase, StreamingTransport):
 
         self.getspace()
         self.stream()
+
+        self.Clear()
+        self.swap()
+        self.cmd_regwrite(self.REG_PWM_DUTY, 0)
+        self.cmd_regwrite(self.REG_SWIZZLE, 3)
+        self.cmd_regwrite(self.REG_PCLK_POL, 1)
+        self.cmd_regwrite(self.REG_PCLK, 6)
+        self.cmd_setrotate(1)
+        self.cmd_regwrite(self.REG_GPIO, 0x80)
+        for i in range(12):
+            self.cmd_sync()
+        self.cmd_regwrite(self.REG_PWM_DUTY, 128)
 
     def getspace(self):
         self.space = self.raw_read(self.REG_CMDB_SPACE)
@@ -654,10 +678,10 @@ class Eve(Evebase, StreamingTransport):
 
     def start(self, a):
         self.spi.sel()
-        self.spi.write(bytes([
+        self.spi.write([
             0xff & (a >> 16),
             0xff & (a >> 8),
-            0xff & a]))
+            0xff & a])
 
     def wr(self, a, s):
         self.start(a | 0x800000)
@@ -669,7 +693,7 @@ class Eve(Evebase, StreamingTransport):
 
     def raw_read(self, a):
         self.start(a)
-        self.spi.write(bytes(1))
+        self.spi.write([0xff])
         (r, ) = struct.unpack("I", self.spi.read(4))
         self.spi.unsel()
         return r
@@ -684,7 +708,7 @@ class Eve(Evebase, StreamingTransport):
         '''
         Send specific host commands to the display
         '''
-        self.write(bytes([the_cmd, value, 0x00]))
+        self.write([the_cmd, value, 0x00])
 
     def screenshot(self, dest):
         REG_SCREENSHOT_EN    = 0x302010 # Set to enable screenshot mode

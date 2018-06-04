@@ -1,7 +1,7 @@
 
 Commands are:
 
-    ?         transmit status info
+    ?        transmit status info
     e <byte> echo <byte>
     s        select
     u        unselect

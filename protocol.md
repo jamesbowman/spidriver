@@ -7,6 +7,7 @@ Commands are:
     u        unselect
     a <byte> set A signal to 0/1
     b <byte> set B signal to 0/1
+    x        disconnect from SPI bus
     80-bf    write and read 1-64 bytes
     c0-ff    write 1-64 bytes
 

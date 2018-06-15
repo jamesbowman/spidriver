@@ -11,7 +11,7 @@ Commands are:
     80-bf    write and read 1-64 bytes
     c0-ff    write 1-64 bytes
 
-So for example to select, then transfer two bytes 0x12, and unselect, the host sends:
+So for example to select, then transfer two bytes 0x12, and unselect, the host sends 5 bytes:
 
     s
     0x81

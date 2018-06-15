@@ -47,3 +47,24 @@ or using the command line:
     $
 
 ![flashexample2](/images/DSC_1319b.JPG)
+
+Command-line tool
+-----------------
+
+You can build the command-line tool like this:
+
+    $ cd c
+    $ make -f linux/Makefile 
+    mkdir -p build/
+    cc -o build/spi  -I common linux/spi.c common/spidriver.c
+    $ ./build/spi -h
+    Bad command '-h'
+
+    Commands are:
+      i     display status information (uptime, voltage, current, temperature)
+      s     SPI select
+      u     SPI unselect
+      w     write bytes to SPI
+      r N   read N bytes from SPI
+      a 0/1 Set A line
+      b 0/1 Set B line

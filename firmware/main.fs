@@ -9,11 +9,11 @@
 \ P0.6  A
 \ P0.7  B
 
-\ P1.0  SCK
-\ P1.1  MISO (SDA)
-\ P1.2  MOSI (SDA)
-\ P1.3  CS
-\ P1.4  A0
+\ P1.0  SCK             \ 
+\ P1.1  MISO (SDA)      | to ST7735s LCD 
+\ P1.2  MOSI (SDA)      |
+\ P1.3  CS              /
+\ P1.4  
 \ P1.5  USBV analog
 \ P1.6  current sense
 
@@ -23,7 +23,7 @@ There are 4 threads:
          1000Hz tick. Increments the BCD milliscond timer.
          Timer 2 interrupt.
 
-         ADC drive. Runs ADC conversions, stores results in adc-.
+         ADC drive. Runs ADC conversions, stores results in variables.
          ADC end of conversion interrupt.
 
          UART/SPI service. Runs the transport.

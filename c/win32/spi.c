@@ -11,6 +11,8 @@ int main(int argc, char *argv[])
     exit(1);
   } else {
     spi_connect(&sd, argv[1]);
+    if (!sd.connected)
+      exit(1);
     return spi_commands(&sd, argc - 2, argv + 2);
   }
 }

@@ -114,16 +114,20 @@ int openSerialPort(const char *portname)
   int fd;
   
   fd = open(portname, O_RDWR | O_NOCTTY);
-  if (fd == -1)
+  if (fd == -1) {
     perror(portname);
+    return -1;
+  }
 
   tcgetattr(fd, &Settings);
   cfsetispeed(&Settings, B460800);
   cfsetospeed(&Settings, B460800);
   cfmakeraw(&Settings);
   Settings.c_cc[VMIN] = 1;
-  if (tcsetattr(fd, TCSANOW, &Settings) != 0)
+  if (tcsetattr(fd, TCSANOW, &Settings) != 0) {
     perror("Serial settings");
+    return -1;
+  }
 
   return fd;
 }
@@ -215,7 +219,10 @@ void spi_connect(SPIDriver *sd, const char* portname)
 {
   int i;
 
+  sd->connected = 0;
   sd->port = openSerialPort(portname);
+  if (sd->port == -1)
+    return;
   writeToSerialPort(sd->port,
     "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", 64);
 
@@ -226,7 +233,7 @@ void spi_connect(SPIDriver *sd, const char* portname)
     char rx[1];
     int n = readFromSerialPort(sd->port, rx, 1);
     if ((n != 1) || (rx[0] != tests[i]))
-      assert(0);
+      return;
   }
 
   sd->connected = 1;

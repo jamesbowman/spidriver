@@ -6,6 +6,11 @@
 int main(int argc, char *argv[])
 {
   SPIDriver sd;
-  spi_connect(&sd, "COM3");
-  return spi_commands(&sd, argc - 1, argv + 1);
+  if (argc < 2) {
+    printf("Usage: spicl <PORTNAME> <commands>\n");
+    exit(1);
+  } else {
+    spi_connect(&sd, argv[1]);
+    return spi_commands(&sd, argc - 2, argv + 2);
+  }
 }

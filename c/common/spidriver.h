@@ -10,6 +10,7 @@
 #endif
 
 typedef struct {
+  int connected;          // Set to 1 when connected
   HANDLE port;
   char      model[16],
             serial[9];    // Serial number of USB device

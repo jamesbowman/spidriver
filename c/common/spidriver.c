@@ -17,12 +17,11 @@
 
 #include <windows.h>
 
-void ErrorExit(LPTSTR lpszFunction) 
+void ErrorExit(const char *func_name) 
 { 
     // Retrieve the system error message for the last-error code
 
     LPVOID lpMsgBuf;
-    LPVOID lpDisplayBuf;
     DWORD dw = GetLastError(); 
 
     FormatMessage(
@@ -37,20 +36,18 @@ void ErrorExit(LPTSTR lpszFunction)
 
     // Display the error message and exit the process
 
-    lpDisplayBuf = (LPVOID)LocalAlloc(LMEM_ZEROINIT, 
-        (lstrlen((LPCTSTR)lpMsgBuf) + lstrlen((LPCTSTR)lpszFunction) + 40) * sizeof(TCHAR)); 
-    sprintf((LPTSTR)lpDisplayBuf, TEXT("%s failed with error %d:\n%s"), lpszFunction, dw, lpMsgBuf); 
-    MessageBox(NULL, (LPCTSTR)lpDisplayBuf, TEXT("Error"), MB_OK); 
+    char mm[lstrlen((LPCTSTR)lpMsgBuf) + strlen(func_name) + 40];
+    sprintf(mm, "%s failed with error %d:\n%s", func_name, dw, lpMsgBuf); 
+    MessageBox(NULL, (LPCTSTR)mm, TEXT("Error"), MB_OK); 
 
     LocalFree(lpMsgBuf);
-    LocalFree(lpDisplayBuf);
     ExitProcess(dw); 
 }
 
-HANDLE openSerialPort(LPCSTR portname)
+HANDLE openSerialPort(const char *portname)
 {
     DWORD  accessdirection = GENERIC_READ | GENERIC_WRITE;
-    HANDLE hSerial = CreateFile(portname,
+    HANDLE hSerial = CreateFile((LPCSTR)portname,
         accessdirection,
         0,
         0,
@@ -228,10 +225,11 @@ void spi_connect(SPIDriver *sd, const char* portname)
     writeToSerialPort(sd->port, tx, 2);
     char rx[1];
     int n = readFromSerialPort(sd->port, rx, 1);
-    if (rx[0] != tests[i])
+    if ((n != 1) || (rx[0] != tests[i]))
       assert(0);
   }
 
+  sd->connected = 1;
   spi_getstatus(sd);
   sd->e_ccitt_crc = sd->ccitt_crc;
 }

@@ -13,13 +13,13 @@ EXE = Win32App.exe
 
 # Compiler flags. Compile ANSI build only if CHARSET=ANSI.
 ifeq (${CHARSET}, ANSI)
-  CFLAGS = -O2 -std=c99 -D _WIN32_IE=0x0500 -D WINVER=0x0500 ${WARNS} -Iinclude
+  CFLAGS = -O2 -D _WIN32_IE=0x0500 -D WINVER=0x0500 ${WARNS} -Iinclude -I../common
 else
-  CFLAGS = -O2 -std=c99 -D UNICODE -D _UNICODE -D _WIN32_IE=0x0500 -D WINVER=0x0500 ${WARNS} -Iinclude
+  CFLAGS = -O2 -D UNICODE -D _UNICODE -D _WIN32_IE=0x0500 -D WINVER=0x0500 ${WARNS} -Iinclude -I../common
 endif
 
 # Linker flags
-LDFLAGS = -s -lcomctl32 -mwindows -static-libgcc
+LDFLAGS = -s -lcomctl32 -mwindows -static-libgcc -static-libstdc++
 
 .PHONY: all clean
 
@@ -32,6 +32,9 @@ bin obj:
 
 # Compile object files for executable
 obj/%.o: src/%.c | obj
+	${CC} ${CFLAGS} -c "$<" -o "$@"
+
+obj/spidriver.o: ../common/spidriver.c | obj
 	${CC} ${CFLAGS} -c "$<" -o "$@"
 
 # Build the resources

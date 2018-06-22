@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+
+rm -f bin/Win32App.exe
+make CHARSET=ANSI
+cp bin/Win32App.exe /data/win10/

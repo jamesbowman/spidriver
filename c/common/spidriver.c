@@ -37,7 +37,7 @@ void ErrorExit(const char *func_name)
     // Display the error message and exit the process
 
     char mm[lstrlen((LPCTSTR)lpMsgBuf) + strlen(func_name) + 40];
-    sprintf(mm, "%s failed with error %d:\n%s", func_name, dw, lpMsgBuf); 
+    sprintf(mm, "%s failed with error %lu:\n%s", func_name, dw, (char*)lpMsgBuf); 
     MessageBox(NULL, (LPCTSTR)mm, TEXT("Error"), MB_OK); 
 
     LocalFree(lpMsgBuf);

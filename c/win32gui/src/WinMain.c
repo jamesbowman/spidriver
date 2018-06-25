@@ -19,86 +19,9 @@ static SPIDriver sd;
 
 static char last_good[MAX_TEXT];
 
-int HandleCmdLine(char cl[])
-{
-  char *s = cl;
+static HFONT monoBold, monoRegular;
 
-  while (1) {
-    char *token = strtok(s, " ");
-    s = NULL;
-    if (token == NULL)
-      break;
-    // printf("token [%s]\n", token);
-    if (strlen(token) != 1)
-      goto badcommand;
-    switch (token[0]) {
-
-    case '?':
-      spi_getstatus(&sd);
-      printf("uptime %" SCNu64"  %.3f V  %.0f mA  %.1f C\n", sd.uptime, sd.voltage_v, sd.current_ma, sd.temp_celsius);
-      break;
-
-    case 's':
-      spi_sel(&sd);
-      break;
-
-    case 'u':
-      spi_unsel(&sd);
-      break;
-
-    case 'w':
-    case 't':
-      {
-        token = strtok(s, " ");
-        char bytes[8192], *endptr = token;
-        size_t nn = 0;
-        while (nn < sizeof(bytes)) {
-          bytes[nn++] = strtol(endptr, &endptr, 0);
-          if (*endptr == '\0')
-            break;
-          if (*endptr != ',') {
-            fprintf(stderr, "Invalid bytes '%s'\n", token);
-            return 1;
-          }
-          endptr++;
-        }
-        spi_write(&sd, bytes, nn);
-      }
-      break;
-
-    case 'r':
-      {
-        token = strtok(s, " ");
-        size_t nn = strtol(token, NULL, 0);
-        char bytes[8192];
-        spi_read(&sd, bytes, nn);
-        for (size_t i = 0; i < nn; i++)
-          printf("%02x ", bytes[i]);
-        printf("\n");
-      }
-      break;
-
-    case 'a':
-      token = strtok(s, " ");
-      if (token != NULL)
-        spi_seta(&sd, token[0]);
-      break;
-
-    case 'b':
-      token = strtok(s, " ");
-      if (token != NULL)
-        spi_setb(&sd, token[0]);
-      break;
-
-    default:
-    badcommand:
-      fprintf(stderr, "Bad command '%s'\n", token);
-      return 1;
-    }
-  }
-
-  return 0;
-}
+static char mosi[4096], miso[4096];
 
 static void info(HWND hDlg, int id, const char *fmt, ...)
 {
@@ -112,14 +35,17 @@ static void info(HWND hDlg, int id, const char *fmt, ...)
 
 static void update(HWND hDlg)
 {
-  spi_getstatus(&sd);
-  info(hDlg, INF_V, "%.2f V", sd.voltage_v);
-  info(hDlg, INF_C, "%.0f mA", sd.current_ma);
-  info(hDlg, INF_T, "%.1f C", sd.temp_celsius);
-  int days = sd.uptime / (24 * 3600);
-  int rem = sd.uptime % (24 * 3600);
-  int hh = rem / 3600, mm = (rem / 60) % 60, ss = rem % 60;
-  info(hDlg, INF_U, "%d:%02d:%02d:%02d", days, hh, mm, ss);
+  if (sd.connected) {
+    spi_getstatus(&sd);
+    info(hDlg, INF_S, "%s", sd.serial);
+    info(hDlg, INF_V, "%.2f V", sd.voltage_v);
+    info(hDlg, INF_C, "%.0f mA", sd.current_ma);
+    info(hDlg, INF_T, "%.1f C", sd.temp_celsius);
+    int days = sd.uptime / (24 * 3600);
+    int rem = sd.uptime % (24 * 3600);
+    int hh = rem / 3600, mm = (rem / 60) % 60, ss = rem % 60;
+    info(hDlg, INF_U, "%d:%02d:%02d:%02d", days, hh, mm, ss);
+  }
 }
 
 /*
@@ -136,29 +62,95 @@ static int hexstring(char *dst, const char *instr)
 }
 */
 
+static void is_disconnected(HWND hDlg)
+{
+  EnableWindow(GetDlgItem(hDlg, BTN_A), FALSE);
+  EnableWindow(GetDlgItem(hDlg, BTN_B), FALSE);
+  EnableWindow(GetDlgItem(hDlg, BTN_CS), FALSE);
+  EnableWindow(GetDlgItem(hDlg, BTN_TX), FALSE);
+}
+
+static void is_connected(HWND hDlg)
+{
+  EnableWindow(GetDlgItem(hDlg, BTN_A), TRUE);
+  EnableWindow(GetDlgItem(hDlg, BTN_B), TRUE);
+  EnableWindow(GetDlgItem(hDlg, BTN_CS), TRUE);
+  EnableWindow(GetDlgItem(hDlg, BTN_TX), TRUE);
+
+  CheckDlgButton(hDlg, BTN_A,   sd.a ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton(hDlg, BTN_B,   sd.b ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton(hDlg, BTN_CS, sd.cs ? BST_UNCHECKED : BST_CHECKED);
+}
+
+static void scan_ports(HWND cb)
+{
+  TCHAR lpTargetPath[5000];
+
+  for(int i=0; i<255; i++) {
+    char ComName[10];
+    sprintf(ComName, "COM%d", i);
+    if (QueryDosDevice(ComName, (LPSTR)lpTargetPath, 10000) != 0)
+      SendMessage(cb, CB_ADDSTRING, 0, (WPARAM)ComName);
+  }
+  SendMessage(cb, CB_SETCURSEL, 0, 0);
+}
+
+static void newdevice(HWND hDlg)
+{
+  char dev[10] = "";
+  GetDlgItemText(hDlg, COMBO_DEV, dev, 9);
+  if (strlen(dev) != 0) {
+    spi_connect(&sd, dev);
+    is_connected(hDlg);
+    update(hDlg);
+  } else {
+    is_disconnected(hDlg);
+  }
+}
+
+static void load_fonts(HWND hDlg)
+{
+  HDC hdc = GetDC(hDlg);
+
+  LOGFONT logFont = {0};
+
+  strcpy(logFont.lfFaceName, "Courier New");
+
+  logFont.lfHeight = -MulDiv(8, GetDeviceCaps(hdc, LOGPIXELSY), 72);
+  monoRegular = CreateFontIndirect(&logFont);
+
+  logFont.lfHeight = -MulDiv(20, GetDeviceCaps(hdc, LOGPIXELSY), 72);
+  logFont.lfWeight = FW_BOLD;
+  monoBold = CreateFontIndirect(&logFont);
+
+
+  ReleaseDC(hDlg, hdc);
+}
+
 INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
   switch(uMsg)
   {
   case WM_INITDIALOG:
     {
-      HWND cb = GetDlgItem(hDlg, 777);
-      SendMessage(cb, CB_ADDSTRING, 0, (LPARAM)"Hex");
-      SendMessage(cb, CB_ADDSTRING, 0, (LPARAM)"Text");
-      SendMessage(cb, CB_SETCURSEL, 0, 0);
 
-      CheckDlgButton(hDlg, BTN_A,   sd.a ? BST_CHECKED : BST_UNCHECKED);
-      CheckDlgButton(hDlg, BTN_B,   sd.b ? BST_CHECKED : BST_UNCHECKED);
-      CheckDlgButton(hDlg, BTN_CS, sd.cs ? BST_UNCHECKED : BST_CHECKED);
 
-      update(hDlg);
+      load_fonts(hDlg);
+
+      scan_ports(GetDlgItem(hDlg, COMBO_DEV));
+
+      SendMessage(GetDlgItem(hDlg, EDIT_TX), WM_SETFONT, (WPARAM)monoBold, (LPARAM)MAKELONG(TRUE, 0));
+      SendMessage(GetDlgItem(hDlg, MISO_LOG), WM_SETFONT, (WPARAM)monoRegular, (LPARAM)MAKELONG(TRUE, 0));
+      SendMessage(GetDlgItem(hDlg, MOSI_LOG), WM_SETFONT, (WPARAM)monoRegular, (LPARAM)MAKELONG(TRUE, 0));
+
+      newdevice(hDlg);
 
       SetTimer(hDlg, EVT_T, 1000, NULL);
     }
     break;
 
   case WM_COMMAND:
-    printf("wParam = %d\n", LOWORD(wParam));
+    // printf("wParam = %d\n", LOWORD(wParam));
     SetTimer(hDlg, EVT_T, 1000, NULL);
     switch(LOWORD(wParam))
     {
@@ -167,18 +159,22 @@ INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
       return TRUE;
 
     case BTN_A:
-      spi_seta(&sd, IsDlgButtonChecked(hDlg, BTN_A));
+      if (sd.connected)
+        spi_seta(&sd, IsDlgButtonChecked(hDlg, BTN_A));
       return TRUE;
 
     case BTN_B:
-      spi_setb(&sd, IsDlgButtonChecked(hDlg, BTN_B));
+      if (sd.connected)
+        spi_setb(&sd, IsDlgButtonChecked(hDlg, BTN_B));
       return TRUE;
 
     case BTN_CS:
-      if (IsDlgButtonChecked(hDlg, BTN_CS))
-        spi_sel(&sd);
-      else
-        spi_unsel(&sd);
+      if (sd.connected) {
+        if (IsDlgButtonChecked(hDlg, BTN_CS))
+          spi_sel(&sd);
+        else
+          spi_unsel(&sd);
+      }
       return TRUE;
 
 #if 1
@@ -193,8 +189,16 @@ INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
             PAGE_READWRITE); 
         GetWindowText(HWND(lParam), pszMem, 
             cTxtLen + 1);
-        printf("XXX '%s'\n", pszMem);
-        int legal = 1;
+        int legal;
+        unsigned value;
+        size_t l = strlen(pszMem);
+        legal = (l < 3);
+        for (char *pc = pszMem; *pc; pc++)
+          legal &= (strchr("0123456789ABCDEF", *pc) != NULL);
+        if (legal)
+          strcpy(last_good, pszMem);
+        else
+          SetWindowText(HWND(lParam), last_good);
         VirtualFree(pszMem, 0, MEM_RELEASE);
         return TRUE;
       }
@@ -202,25 +206,41 @@ INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 #endif
 
     case BTN_TX:
-      {
+      if (sd.connected) {
         char buf[4096];
         HWND tc = GetDlgItem(hDlg, EDIT_TX);
         GetWindowText(tc, buf, 4096);
-        printf("Transmitting %d bytes", strlen(buf));
-        spi_write(&sd, buf, strlen(buf));
+
+        if (strlen(buf) == 0)
+          return TRUE;
+
+        unsigned int value;
+        sscanf(buf, "%x", &value);
+        char byte[1] = {value};
+        spi_writeread(&sd, byte, 1);
+
         SetWindowText(tc, "");
         SendMessage(tc, EM_SETSEL, -1, -1);
         strcpy(last_good, "");
-        return TRUE;
-      }
 
-    case BTN_RX:
-      {
-        char buf[1];
-        spi_read(&sd, buf, 1);
-        info(hDlg, EDIT_RX, "%02x", buf[0]);
-        return TRUE;
+        sprintf(miso + strlen(miso), "%02x ", byte[0] & 0xff);
+        sprintf(mosi + strlen(mosi), "%02x ", value);
+
+        tc = GetDlgItem(hDlg, MISO_LOG);
+        SetWindowText(tc, miso);
+        SendMessage(tc, EM_SETSEL, strlen(miso), strlen(miso));
+
+        tc = GetDlgItem(hDlg, MOSI_LOG);
+        SetWindowText(tc, mosi);
+        SendMessage(tc, EM_SETSEL, strlen(mosi), strlen(mosi));
       }
+      return TRUE;
+
+    case COMBO_DEV:
+      if (CBN_SELCHANGE == HIWORD(wParam))
+        newdevice(hDlg);
+      return TRUE;
+
     }
     break;
 
@@ -256,20 +276,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
   /* Assign global HINSTANCE */
   g_hInstance = hInstance;
 
-  // AllocConsole();
   AttachConsole(ATTACH_PARENT_PROCESS);
   freopen("CONIN$", "r",stdin); 
   freopen("CONOUT$","w",stdout); 
   freopen("CONOUT$","w",stderr); 
-
-  spi_connect(&sd, "COM4");
-  spi_getstatus(&sd);
-
-  if (strlen(lpCmdLine) != 0) {
-    char cl[1024] = {0};
-    strncpy(cl, lpCmdLine, sizeof(cl) - 1);
-    return HandleCmdLine(cl);
-  }
+  // spi_connect(&sd, "COM4");
 
   /* Initialise common controls */
   icc.dwSize = sizeof(icc);

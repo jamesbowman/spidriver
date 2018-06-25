@@ -66,32 +66,39 @@ BEGIN
   DEFPUSHBUTTON    "OK",IDOK,90,46,50,14,WS_GROUP
 END
 
-/* Our "about" dialog */
-IDD_DIALOG1 DIALOGEX 0, 0, 320, 200
+FONT_LARGE FONT  "IBMPlexMono-SemiBold.otf"
+
+/* Main window */
+IDD_DIALOG1 DIALOGEX 0, 0, 170, 170
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "SPIDriver"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-  LTEXT         "Voltage", 999,    10, 10, 50,  20, SS_LEFT
-  RTEXT         "0.000 V", INF_V,  60, 10, 50,  20, SS_RIGHT
-  LTEXT         "Current", 999,    10, 20, 50,  20, SS_LEFT
-  RTEXT         "0.000 V", INF_C,  60, 20, 50,  20, SS_RIGHT
-  LTEXT         "Temp.",   999,    10, 30, 50,  20, SS_LEFT
-  RTEXT         "0.0 C",   INF_T,  60, 30, 50,  20, SS_RIGHT
-  LTEXT         "Running", 999,    10, 40, 50,  20, SS_LEFT
-  RTEXT         "0",       INF_U,  60, 40, 50,  20, SS_RIGHT
+  COMBOBOX                  COMBO_DEV,10,  10,  70, 39, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 
-  CHECKBOX        "CS",   BTN_CS,  10, 80, 40, 10, BS_AUTOCHECKBOX
+  LTEXT         "Serial",   999,      35,  30,  50,  10, SS_LEFT
+  RTEXT         "",         INF_S,    85,  30,  50,  10, SS_RIGHT
+  LTEXT         "Voltage",  999,      35,  40,  50,  10, SS_LEFT
+  RTEXT         "0.000 V",  INF_V,    85,  40,  50,  10, SS_RIGHT
+  LTEXT         "Current",  999,      35,  50,  50,  10, SS_LEFT
+  RTEXT         "0.000 V",  INF_C,    85,  50,  50,  10, SS_RIGHT
+  LTEXT         "Temp.",    999,      35,  60,  50,  10, SS_LEFT
+  RTEXT         "0.0 C",    INF_T,    85,  60,  50,  10, SS_RIGHT
+  LTEXT         "Running",  999,      35,  70,  50,  10, SS_LEFT
+  RTEXT         "0",        INF_U,    85,  70,  50,  10, SS_RIGHT
 
-  COMBOBOX                777,     10, 100, 35, 39, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-  EDITTEXT                EDIT_TX, 50, 100, 200,20, WS_TABSTOP | ES_UPPERCASE
-  DEFPUSHBUTTON   "Send", BTN_TX,  260,100, 50, 20
+  LTEXT         "MISO",     999,      10,  90,  30,  10, SS_LEFT
+  EDITTEXT                  MISO_LOG, 35,  90, 125,  10, WS_TABSTOP | ES_READONLY | ES_RIGHT | ES_AUTOHSCROLL
+  LTEXT         "MOSI",     999,      10, 100,  30,  10, SS_LEFT
+  EDITTEXT                  MOSI_LOG, 35, 100, 125,  10, WS_TABSTOP | ES_READONLY | ES_RIGHT | ES_AUTOHSCROLL
 
-  EDITTEXT                EDIT_RX, 50, 130, 200,20, WS_TABSTOP | ES_READONLY
-  DEFPUSHBUTTON   "Recv", BTN_RX,  260,130, 50, 20
-  CHECKBOX        "A",    BTN_A,   10, 160, 40, 10, BS_AUTOCHECKBOX
-  CHECKBOX        "B",    BTN_B,   10, 185, 40, 10, BS_AUTOCHECKBOX
-  // GROUPBOX         "Options",   IDOK, 5, 5, 315, 100
+  CHECKBOX        "CS",     BTN_CS,   35, 120,  40,  10, BS_AUTOCHECKBOX
+  CHECKBOX        "A",      BTN_A,    75, 120,  40,  10, BS_AUTOCHECKBOX
+  CHECKBOX        "B",      BTN_B,    115, 120,  40,  10, BS_AUTOCHECKBOX
+
+  EDITTEXT                  EDIT_TX,  35, 135,  50,  20, WS_TABSTOP | ES_UPPERCASE
+  DEFPUSHBUTTON "Transfer", BTN_TX,   95, 135,  50,  20
+
 END
 
 /* Our accelerators */

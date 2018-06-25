@@ -221,8 +221,10 @@ void spi_connect(SPIDriver *sd, const char* portname)
 
   sd->connected = 0;
   sd->port = openSerialPort(portname);
+#if !defined(WIN32)
   if (sd->port == -1)
     return;
+#endif
   writeToSerialPort(sd->port,
     "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", 64);
 

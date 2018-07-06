@@ -97,7 +97,6 @@ class ST7735:
         self.writeData(bytes([cc]))
 
     def cmd(self, cc, args = ()):
-        print("CMD", cc, args)
         self.write(0, bytes([cc]))
         self.writeData(bytes(args))
 
@@ -113,115 +112,52 @@ class ST7735:
         self.writeData(w * h * struct.pack(">H", color))
 
     def start(self):
-        self.cmd(SWRESET)                   #  1: Software reset, 0 args, w/delay
-        time.sleep(.120)
-        self.cmd(SLPOUT)                    #  2: Out of sleep mode, 0 args, w/delay
-        time.sleep(.120)
-
-        Rcmd1 = [
-            FRMCTR1       , 3      ,            #  3: Frame rate ctrl - normal mode, 3 args:
-              0x01, 0x2C, 0x2D,                 #     Rate = fosc/(1x2+40) * (LINE+2C+2D)
-            FRMCTR2       , 3      ,            #  4: Frame rate control - idle mode, 3 args:
-              0x01, 0x2C, 0x2D,                 #     Rate = fosc/(1x2+40) * (LINE+2C+2D)
-            FRMCTR3       , 6      ,            #  5: Frame rate ctrl - partial mode, 6 args:
-              0x01, 0x2C, 0x2D,                 #     Dot inversion mode
-              0x01, 0x2C, 0x2D,                 #     Line inversion mode
-            PWCTR1        , 3      ,            #  7: Power control, 3 args:
-              0xA2,
-              0x02,                             #     -4.6V
-              0x84,                             #     AUTO mode
-            PWCTR2        , 1      ,            #  8: Power control, 1 arg:
-              0xC5,                             #     VGH25 = 2.4C VGSEL = -10 VGH = 3 * AVDD
-            PWCTR3        , 2      ,            #  9: Power control, 2 args:
-              0x0A,                             #     Opamp current small
-              0x00,                             #     Boost frequency
-            PWCTR4        , 2      ,            # 10: Power control, 2 args:
-              0x8A,                             #     BCLK/2, Opamp current small & Medium low
-              0x2A,  
-            PWCTR5        , 2      ,            # 11: Power control, 2 args:
-              0x8A, 0xEE,
-            VMCTR1        , 1      ,            # 12: Power control, 1 arg:
-              0x0E,
-            MADCTL        , 1      ,            # 13: Memory access control (directions), 1 arg:
-              0xC8,                             #     row addr/col addr, bottom to top refresh
-            COLMOD        , 1      ,            # 14: set color mode, 1 arg:
-              0x05,                             #     16-bit color
-            GMCTRP1       , 16      ,           # 15: Gamma + polarity Correction Characterstics
-              0x02 , 0x1c , 0x07 , 0x12 ,
-              0x37 , 0x32 , 0x29 , 0x2d ,
-              0x29 , 0x25 , 0x2B , 0x39 ,
-              0x00 , 0x01 , 0x03 , 0x10 ,
-            GMCTRN1       , 16      ,           # 16: Gamma - polarity Correction Characterstics
-              0x03 , 0x1d , 0x07 , 0x06 ,
-              0x2E , 0x2C , 0x29 , 0x2D ,
-              0x2E , 0x2E , 0x37 , 0x3F ,
-              0x00 , 0x00 , 0x02 , 0x10 ,
-            NORON         , 0       ,           # 17: Normal display on
-            DISPON        , 0       ,           # 18: Main screen turn on
-        ]
+        self.cmd(SWRESET)                   #  Software reset, 0 args, w/delay
+        time.sleep(.180)
+        self.cmd(SLPOUT)                    #  Out of sleep mode, 0 args, w/delay
+        time.sleep(.180)
 
         commands = [
-        (FRMCTR1       , (                   #  3: Frame rate ctrl - normal mode, 3 args:
-          0x01, 0x2C, 0x2D)),                 #     Rate = fosc/(1x2+40) * (LINE+2C+2D)
-        (FRMCTR2       , (                   #  4: Frame rate control - idle mode, 3 args:
-          0x01, 0x2C, 0x2D)),                 #     Rate = fosc/(1x2+40) * (LINE+2C+2D)
-        (FRMCTR3       , (                   #  5: Frame rate ctrl - partial mode, 6 args:
+        (FRMCTR1       , (                  #  Frame rate ctrl - normal mode
+          0x01, 0x2C, 0x2D)),               #     Rate = fosc/(1x2+40) * (LINE+2C+2D)
+        (FRMCTR2       , (                  #  Frame rate control - idle mode
+          0x01, 0x2C, 0x2D)),               #     Rate = fosc/(1x2+40) * (LINE+2C+2D)
+        (FRMCTR3       , (                  #  Frame rate ctrl - partial mode
           0x01, 0x2C, 0x2D,                 #     Dot inversion mode
-          0x01, 0x2C, 0x2D)),                 #     Line inversion mode
-        (PWCTR1        , (                   #  7: Power control, 3 args:
+          0x01, 0x2C, 0x2D)),               #     Line inversion mode
+        (PWCTR1        , (                  #  Power control
           0xA2,
           0x02,                             #     -4.6V
-          0x84)),                             #     AUTO mode
-        (PWCTR2        , (                   #  8: Power control, 1 arg:
-          0xC5,)),                           #     VGH25 = 2.4C VGSEL = -10 VGH = 3 * AVDD
-        (PWCTR3        , (                   #  9: Power control, 2 args:
+          0x84)),                           #     AUTO mode
+        (PWCTR2        , (                  #  Power control
+          0xC5,)),                          #     VGH25 = 2.4C VGSEL = -10 VGH = 3 * AVDD
+        (PWCTR3        , (                  #  Power control
           0x0A,                             #     Opamp current small
-          0x00)),                            #     Boost frequency
-        (PWCTR4        , (                   # 10: Power control, 2 args:
+          0x00)),                           #     Boost frequency
+        (PWCTR4        , (                  #  Power control
           0x8A,                             #     BCLK/2, Opamp current small & Medium low
           0x2A)), 
-        (PWCTR5        , (                   # 11: Power control, 2 args:
+        (PWCTR5        , (                  #  Power control
           0x8A, 0xEE)),
-        (VMCTR1        , (                   # 12: VCOM control, 1 arg:
+        (VMCTR1        , (                  #  VCOM control
           0x0E,)),
-        (MADCTL        , (                   # 13: Memory access control (directions), 1 arg:
-          0xC8, )),                            #     row addr/col addr, bottom to top refresh
-        (COLMOD        , (                   # 14: set color mode, 1 arg:
-          0x05,)),                             #     16-bit color
-        (GMCTRP1       , (                   # 15: Gamma + polarity Correction Characterstics
+        (MADCTL        , (                  #  Memory access control (directions)
+          0xC8, )),                         #      row addr/col addr, bottom to top refresh
+        (COLMOD        , (                  #  set color mode
+          0x05,)),                          #      16-bit color
+        (GMCTRP1       , (                  #  Gamma + polarity Correction Characterstics
           0x02 , 0x1c , 0x07 , 0x12 ,
           0x37 , 0x32 , 0x29 , 0x2d ,
           0x29 , 0x25 , 0x2B , 0x39 ,
           0x00 , 0x01 , 0x03 , 0x10)),
-        (GMCTRN1       , (                   # 16: Gamma - polarity Correction Characterstics
+        (GMCTRN1       , (                  #  Gamma - polarity Correction Characterstics
           0x03 , 0x1d , 0x07 , 0x06 ,
           0x2E , 0x2C , 0x29 , 0x2D ,
           0x2E , 0x2E , 0x37 , 0x3F ,
           0x00 , 0x00 , 0x02 , 0x10)),
-        (NORON         , ())       ,           # 17: Normal display on
-        (DISPON        , ())       ,           # 18: Main screen turn on
-        ][12:]
-
-        cc = Rcmd1
-        i = 0
-        while i < len(cc):
-            self.writeCommand(cc[i])
-            i += 1
-            numArgs = cc[i]
-            i += 1
-            ms = numArgs & DELAY
-            for j in range(numArgs & ~DELAY):
-                self.writeData1(cc[i])
-                i += 1
-            if ms:
-                ms = cc[i]
-                # print('  delay', ms)
-                i += 1
-                if ms == 255:
-                    time.sleep(.5)
-                else:
-                    time.sleep(ms * .001)
-
+        (NORON         , ())       ,        #  Normal display on
+        (DISPON        , ())       ,        #  Main screen turn on
+        ]
         for c, args in commands:
             self.cmd(c, args)
     

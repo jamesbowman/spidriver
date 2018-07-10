@@ -80,6 +80,7 @@ DELAY = 0x80
 class ST7735:
     def __init__(self, sd):
         self.sd = sd
+        self.sd.setb(1)                 # unselect
 
     def write(self, a, c):
         self.sd.seta(a)
@@ -160,6 +161,25 @@ class ST7735:
         ]
         for c, args in commands:
             self.cmd(c, args)
+
+    def clear(self):
+        self.rect(0, 0, 128, 160, 0x0000)
+
+    def loadimage(self, a):
+        im = Image.open(a)
+        if im.size[0] > im.size[1]:
+            im = im.transpose(Image.ROTATE_90)
+        w = 160 * im.size[0] // im.size[1]
+        im = im.resize((w, 160), Image.ANTIALIAS)
+        (w, h) = im.size
+        if w > 128:
+            im = im.crop((w // 2 - 64, 0, w // 2 + 64, 160))
+        elif w < 128:
+            c = Image.new("RGB", (128, 160))
+            c.paste(im, (64 - w // 2, 0))
+            im = c
+        st.setAddrWindow(0, 0, 127, 159)
+        st.writeData(as565(im.convert("RGB")))
     
 if __name__ == '__main__':
     try:
@@ -172,12 +192,9 @@ if __name__ == '__main__':
         sys.exit(1)
     optdict = dict(optlist)
 
-    s = SPIDriver(optdict.get('-h', "/dev/ttyUSB0"))
-    st = ST7735(s)
+    st = ST7735(SPIDriver(optdict.get('-h', "/dev/ttyUSB0")))
     st.start()
-    st.rect(0, 0, 128, 160, 0x0000)
+    st.clear()
 
     for a in args:
-        im = Image.open(a)
-        st.setAddrWindow(0, 0, 127, 159)
-        st.writeData(as565(im.convert("RGB")))
+        st.loadimage(a)

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # coding=utf-8
-
 import array
 import random
 import sys
@@ -14,6 +13,7 @@ from spidriver import SPIDriver
 
 def rnd(n):
     return random.randrange(n)
+
 
 if __name__ == '__main__':
     s = SPIDriver(sys.argv[1])

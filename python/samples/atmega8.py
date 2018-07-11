@@ -26,6 +26,7 @@ from spidriver import SPIDriver
 class ConnectionError(Exception):
     pass
 
+
 class AtMega:
     def __init__(self, s):
         self.s = s
@@ -49,7 +50,7 @@ class AtMega:
         # Send insns, return last byte of each packet
         r = self.s.writeread(bytes(insns))
         return [r[i] for i in range(3, len(insns), 4)]
-        
+
     def lohi(self, bb):
         (lo, hi) = self.multifetch(bb)
         return lo | (hi << 8)
@@ -65,16 +66,16 @@ class AtMega:
     def waitready(self):
         # Poll RDY/BSY until operation completes
         while True:
-           (rdy,) = self.multifetch([0xf0, 0, 0, 0])
-           if (rdy & 1) == 0:
-            return
+            (rdy,) = self.multifetch([0xf0, 0, 0, 0])
+            if (rdy & 1) == 0:
+                return
 
     def erase(self):
         self.s.write(bytes([0xac, 0x80, 0, 0]))
         self.waitready()
 
     def write_page(self, a, page):
-        for i,v in enumerate(page):
+        for i, v in enumerate(page):
             self.s.write(bytes([0x40, 0, i, v & 0xff]))
             self.s.write(bytes([0x48, 0, i, v >> 8]))
         self.s.write(bytes([0x4c, a >> 8, a & 0xff, 0]))
@@ -82,28 +83,33 @@ class AtMega:
 
     def load(self, program):
         for i in range(0, len(program), 64):
-            self.write_page(i, program[i:i+64])
+            self.write_page(i, program[i:i + 64])
 
     def verify(self, program):
-        for i,p in enumerate(program):
+        for i, p in enumerate(program):
             assert self.read_program_memory(i) == p, ("Mismatch at offset %d" % i)
 
     def release(self):
         self.s.seta(1)
         self.s.detach()
 
+
 def read_hex(filename):
     m = []
+
     def hexbyte(l, n):
-        return int(l[2*n+1:2*n+3], 16)
+        return int(l[2 * n + 1:2 * n + 3], 16)
+
     def hexword(l, n):
         return hexbyte(l, n) | (hexbyte(l, n + 1) << 8)
+
     for l in open(filename, "rt"):
         count = hexbyte(l, 0)
         for i in range(4, 4 + count, 2):
             m.append(hexword(l, i))
     # print("".join(["%04x " % w for w in m]))
     return m
+
 
 if __name__ == '__main__':
     program = read_hex(sys.argv[2])

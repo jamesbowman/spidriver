@@ -1,7 +1,7 @@
 # coding=utf-8
 from setuptools import setup
 
-LONG="""\
+LONG = """\
 SPIDriver is a tool for controlling any SPI device from your PC's USB port. It connects as a standard USB serial device, so there are no drivers to install."""
 
 for l in open("spidriver.py", "rt"):
@@ -18,4 +18,4 @@ setup(name='spidriver',
       license='GPL',
       py_modules=['spidriver'],
       install_requires=['pyserial']
-)
+      )

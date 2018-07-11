@@ -1,5 +1,6 @@
 # coding=utf-8
 import gi
+
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib
 
@@ -7,7 +8,10 @@ import struct
 
 from spidriver import SPIDriver
 
-def ison(button): return button.get_state() == Gtk.StateType.ACTIVE
+
+def ison(button):
+    return button.get_state() == Gtk.StateType.ACTIVE
+
 
 class ButtonWindow(Gtk.Window):
 
@@ -54,7 +58,7 @@ class ButtonWindow(Gtk.Window):
 
         self.label_voltage = Gtk.Label()
         self.label_current = Gtk.Label()
-        self.label_temp    = Gtk.Label()
+        self.label_temp = Gtk.Label()
 
         self.tx = Gtk.Entry()
         self.tx.set_max_length(2)
@@ -72,12 +76,12 @@ class ButtonWindow(Gtk.Window):
                 checkbutton("B", self.sd.b, self.click_b),
             ]),
             pair(
-                self.tx,
-                button("Send", self.send)
+                    self.tx,
+                    button("Send", self.send)
             ),
             pair(
-                self.rx,
-                button("Recv", self.click_a)
+                    self.rx,
+                    button("Recv", self.click_a)
             ),
         ]))
         self.refresh()
@@ -106,6 +110,7 @@ class ButtonWindow(Gtk.Window):
         self.label_voltage = label
         """
         GLib.timeout_add(1000, self.refresh)
+
     def refresh(self):
         self.sd.getstatus()
         self.label_voltage.set_text("%.2f V" % self.sd.voltage)
@@ -114,7 +119,8 @@ class ButtonWindow(Gtk.Window):
         return True
 
     def click_cs(self, button):
-        print 'CS state', button.get_state(), Gtk.StateType.ACTIVE
+        print
+        'CS state', button.get_state(), Gtk.StateType.ACTIVE
         [self.sd.unsel, self.sd.sel][ison(button)]()
 
     def click_a(self, button):
@@ -128,7 +134,8 @@ class ButtonWindow(Gtk.Window):
 
     def send(self, _):
         b = self.tx.get_buffer()
-        print b.get_text()
+        print
+        b.get_text()
 
         self.sd.write(struct.pack("B", int(b.get_text(), 16)))
         b.delete_text(0, -1)
@@ -139,6 +146,7 @@ class ButtonWindow(Gtk.Window):
     def on_close_clicked(self, button):
         print("Closing application")
         Gtk.main_quit()
+
 
 win = ButtonWindow()
 win.connect("destroy", Gtk.main_quit)

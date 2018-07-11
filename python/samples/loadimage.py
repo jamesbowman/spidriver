@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # coding=utf-8
-
 import sys
 
 from Eve import Eve
@@ -9,6 +8,7 @@ from spidriver import SPIDriver
 
 def align4(s):
     return s + bytes(-len(s) & 3)
+
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:

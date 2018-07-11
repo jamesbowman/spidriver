@@ -119,8 +119,7 @@ class ButtonWindow(Gtk.Window):
         return True
 
     def click_cs(self, button):
-        print
-        'CS state', button.get_state(), Gtk.StateType.ACTIVE
+        print('CS state', button.get_state(), Gtk.StateType.ACTIVE)
         [self.sd.unsel, self.sd.sel][ison(button)]()
 
     def click_a(self, button):
@@ -134,8 +133,7 @@ class ButtonWindow(Gtk.Window):
 
     def send(self, _):
         b = self.tx.get_buffer()
-        print
-        b.get_text()
+        print(b.get_text())
 
         self.sd.write(struct.pack("B", int(b.get_text(), 16)))
         b.delete_text(0, -1)

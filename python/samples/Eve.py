@@ -26,18 +26,18 @@ class SimpleTransport:
         pass
 
     def c4(self, v):
-        '''
+        """
         Write 32-bit value v to the command FIFO
-        '''
+        """
         while self.space < 4:
             self.getspace()
         self.wr32(self.REG_CMDB_WRITE, v)
         self.space -= 4
 
     def c(self, ss):
-        '''
+        """
         Write s to the command FIFO
-        '''
+        """
         for i in range(0, len(ss), 256):
             s = ss[i:i + 256]
             while self.space < len(s):
@@ -64,17 +64,17 @@ class StreamingTransport:
             self.stream()
             
     def c4(self, v):
-        '''
+        """
         Write 32-bit value v to the command FIFO
-        '''
+        """
         self.reserve(4)
         self.spi.write(struct.pack("I", v))
         self.space -= 4
 
     def c(self, ss):
-        '''
+        """
         Write s to the command FIFO
-        '''
+        """
         for i in range(0, len(ss), 256):
             s = ss[i:i + 256]
             self.reserve(len(s))
@@ -373,17 +373,17 @@ class Evebase:
         self.c4((2 << 30) | ((x & 511) << 21) | ((y & 511) << 12) | ((handle & 31) << 7) | ((cell & 127) << 0))
 
     def VertexFormat(self, frac):
-        self.c4((39 << 24) | (((frac) & 7) << 0))
+        self.c4((39 << 24) | ((frac & 7) << 0))
     def BitmapLayoutH(self, linestride,height):
-        self.c4((40 << 24) | (((linestride) & 3) << 2) | (((height) & 3) << 0))
+        self.c4((40 << 24) | ((linestride & 3) << 2) | ((height & 3) << 0))
     def BitmapSizeH(self, width,height):
-        self.c4((41 << 24) | (((width) & 3) << 2) | (((height) & 3) << 0))
+        self.c4((41 << 24) | ((width & 3) << 2) | ((height & 3) << 0))
     def PaletteSource(self, addr):
-        self.c4((42 << 24) | (((addr) & 4194303) << 0))
+        self.c4((42 << 24) | ((addr & 4194303) << 0))
     def VertexTranslateX(self, x):
-        self.c4((43 << 24) | (((x) & 131071) << 0))
+        self.c4((43 << 24) | ((x & 131071) << 0))
     def VertexTranslateY(self, y):
-        self.c4((44 << 24) | (((y) & 131071) << 0))
+        self.c4((44 << 24) | ((y & 131071) << 0))
     def Nop(self):
         self.c4((45 << 24))
 
@@ -661,9 +661,9 @@ class Eve(Evebase, StreamingTransport):
         # assert 0
 
     def tapcrc(self):
-        '''
+        """
         Return the 32-bit display tap CRC
-        '''
+        """
         self.finish()
         self.unstream()
         f0 = self.raw_read(self.REG_FRAMES)
@@ -707,9 +707,9 @@ class Eve(Evebase, StreamingTransport):
         return r[-size:]
 
     def host_cmd(self, the_cmd, value):
-        '''
+        """
         Send specific host commands to the display
-        '''
+        """
         self.write([the_cmd, value, 0x00])
 
     def screenshot(self, dest):
@@ -735,7 +735,7 @@ class Eve(Evebase, StreamingTransport):
             self.wr32(REG_SCREENSHOT_Y, ly)
             self.wr32(REG_SCREENSHOT_START, 1)
             time.sleep_ms(2)
-            while (self.raw_read(REG_SCREENSHOT_BUSY) | self.raw_read(REG_SCREENSHOT_BUSY + 4)):
+            while self.raw_read(REG_SCREENSHOT_BUSY) | self.raw_read(REG_SCREENSHOT_BUSY + 4):
                 pass
             self.wr32(REG_SCREENSHOT_READ, 1)
             bgra = self.rd(RAM_SCREENSHOT, 4 * w)

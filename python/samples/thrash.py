@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
-from spidriver import SPIDriver
-import random
-import time
-import sys
 import os
+import random
+import sys
+import time
+
+from spidriver import SPIDriver
+
 
 def rnd(n):
     return random.randrange(n)

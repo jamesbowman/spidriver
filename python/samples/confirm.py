@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
-from spidriver import SPIDriver
-import random
-import time
-import sys
 import array
-from crc16pure import crc16xmodem
+import random
+import sys
+import time
 
-import spidriver
+from crc16pure import crc16xmodem
+from spidriver import SPIDriver
+
+
 # print(hex(crc16xmodem(bytes([0xaa, 0xbb, 0xcc]), 0xffff)))
 
 def rnd(n):

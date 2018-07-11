@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
 import sys
-from spidriver import SPIDriver
+
 from Eve import Eve
-import time
+from spidriver import SPIDriver
+
 
 def align4(s):
     return s + bytes(-len(s) & 3)

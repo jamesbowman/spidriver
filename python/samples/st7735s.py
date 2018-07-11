@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 
-import time
-import sys
-import struct
 import array
 import getopt
-import random
+import struct
+import sys
+import time
 
 from PIL import Image
-
 from spidriver import SPIDriver
 
 try:
@@ -137,7 +135,7 @@ class ST7735:
           0x00)),                           #     Boost frequency
         (PWCTR4        , (                  #  Power control
           0x8A,                             #     BCLK/2, Opamp current small & Medium low
-          0x2A)), 
+          0x2A)),
         (PWCTR5        , (                  #  Power control
           0x8A, 0xEE)),
         (VMCTR1        , (                  #  VCOM control
@@ -180,7 +178,7 @@ class ST7735:
             im = c
         st.setAddrWindow(0, 0, 127, 159)
         st.writeData(as565(im.convert("RGB")))
-    
+
 if __name__ == '__main__':
     try:
         optlist, args = getopt.getopt(sys.argv[1:], "h:")

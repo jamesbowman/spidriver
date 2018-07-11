@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-import sys
 import math
+import sys
 import time
 
-from spidriver import SPIDriver
 from Eve import Eve
+from spidriver import SPIDriver
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:

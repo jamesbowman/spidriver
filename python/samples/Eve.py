@@ -1,6 +1,7 @@
-import sys
 import struct
+import sys
 import time
+
 
 def const(x): return x
 

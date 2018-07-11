@@ -18,10 +18,9 @@
 #
 
 import sys
-import time
-import array
 
 from spidriver import SPIDriver
+
 
 class ConnectionError(Exception):
     pass

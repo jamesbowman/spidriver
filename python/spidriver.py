@@ -1,4 +1,5 @@
 import sys
+
 import serial
 
 __version__ = '0.0.1'

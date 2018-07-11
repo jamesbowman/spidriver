@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-from spidriver import SPIDriver
 import random
 import time
-import sys
-from crc16pure import crc16xmodem
+
+from spidriver import SPIDriver
+
 
 # print(hex(crc16xmodem(bytes([0xaa, 0xbb, 0xcc]), 0xffff)))
 

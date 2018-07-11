@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# coding=utf-8
 """Pure python library for calculating CRC16"""
 
 ##############################################################################

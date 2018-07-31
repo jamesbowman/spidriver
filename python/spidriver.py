@@ -1,9 +1,12 @@
+# coding=utf-8
 import sys
+
 import serial
 
 __version__ = '0.0.1'
 
 PYTHON2 = (sys.version_info < (3, 0))
+
 
 class SPIDriver:
     """
@@ -23,8 +26,9 @@ class SPIDriver:
         ccitt_crc   CCITT-16 CRC of all transmitted and received bytes
 
     """
-    def __init__(self, port = "/dev/ttyUSB0"):
-        self.ser = serial.Serial(port, 460800, timeout = 1)
+
+    def __init__(self, port="/dev/ttyUSB0"):
+        self.ser = serial.Serial(port, 460800, timeout=1)
 
         self.ser.write(b'@' * 64)
         while self.ser.inWaiting():
@@ -108,7 +112,7 @@ class SPIDriver:
         """ Update all status variables """
         self.ser.write(b'?')
         r = self.ser.read(80)
-        body = r[1:-1].decode() # remove [ and ]
+        body = r[1:-1].decode()  # remove [ and ]
         (self.product,
          self.serial,
          uptime,

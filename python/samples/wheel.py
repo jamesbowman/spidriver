@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-
-import sys
+# coding=utf-8
 import math
+import sys
 import time
 
-from spidriver import SPIDriver
 from Eve import Eve
+from spidriver import SPIDriver
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
@@ -15,10 +15,12 @@ if __name__ == '__main__':
     e = Eve(s)
     e.initialize()
 
+
     def polar(th, r):
         x = int(16 * (240 + math.cos(th) * r))
         y = int(16 * (136 + math.sin(th) * r))
         e.Vertex2f(x, y)
+
 
     t = 0
     for cycle in range(999999):

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
+# coding=utf-8
+import os
+import random
+import sys
+import time
 
 from spidriver import SPIDriver
-import random
-import time
-import sys
-import os
+
 
 def rnd(n):
     return random.randrange(n)
@@ -13,6 +15,7 @@ def rnd(n):
 def pattern(n):
     return [rnd(256) for i in range(n)]
 
+
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         s = SPIDriver(sys.argv[1])
@@ -20,7 +23,7 @@ if __name__ == '__main__':
         s = SPIDriver()
     # print(s)
     # t1 = time.time() + float(sys.argv[2])
-    while True: # time.time() < t1:
+    while True:  # time.time() < t1:
         for i in range(50):
             random.choice([
                 lambda: s.seta(rnd(2)),
@@ -30,7 +33,7 @@ if __name__ == '__main__':
                 lambda: s.writeread(pattern(1 + rnd(1))),
                 # lambda: s.read(1 + rnd(12)),
                 # lambda: s.getstatus()
-                ])()
+            ])()
         os.system("outlet.py 8 on ; outlet.py 8 off")
         time.sleep(3)
     print(hex(s.debug))

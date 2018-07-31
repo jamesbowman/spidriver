@@ -1,0 +1,13 @@
+set -e
+
+D=$1
+mkdir -p $D
+cp build/spicl.exe spidriver.nsi win32gui/res/Application.ico $D
+unix2dos -n license.txt $D/license.txt
+cp win32gui/bin/Win32App.exe $D/spigui.exe
+cat <<EOL > $D/go.bat
+"C:\Program Files\NSIS\makensis.exe" spidriver.nsi
+copy /Y spidriver-installer.exe C:\Users\james\Desktop
+EOL
+unix2dos $D/go.bat
+

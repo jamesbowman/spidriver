@@ -2,22 +2,21 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib
 
+import re
 import struct
 
 from spidriver import SPIDriver
 
 def ison(button): return button.get_state() == Gtk.StateType.ACTIVE
+def ishex(s): return re.match("[0-9a-fA-F]{2}$", s) is not None
 
-class ButtonWindow(Gtk.Window):
+class SPIDriverWindow(Gtk.Window):
 
     def __init__(self):
         Gtk.Window.__init__(self, title="SPIDriver")
         self.set_border_width(10)
 
         self.sd = SPIDriver()
-        # help(self.sd)
-
-        hbox = Gtk.Box(spacing=6)
 
         def pair(a, b):
             r = Gtk.HBox(spacing=6)
@@ -56,55 +55,34 @@ class ButtonWindow(Gtk.Window):
         self.label_temp    = Gtk.Label()
 
         self.tx = Gtk.Entry()
-        self.tx.set_max_length(2)
-        self.tx.set_width_chars(2)
+        self.tx.set_width_chars(20)
+        self.tx.connect('changed', self.edit)
+
         self.rx = Gtk.Entry()
         self.rx.set_width_chars(20)
+        self.rx.connect('button-press-event', lambda a,b: True)
+        self.rx.set_property('editable', False)
+
+        self.button_send = button("Send", self.send)
+        self.button_send.set_sensitive(False)
 
         self.add(vbox([
-            pair(label("Voltage"), self.label_voltage),
-            pair(label("Current"), self.label_current),
-            pair(label("Temp"), self.label_temp),
+            pair(label("Voltage"),      self.label_voltage),
+            pair(label("Current"),      self.label_current),
+            pair(label("Temp"),         self.label_temp),
+            Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL),
             hbox([
                 checkbutton("CS", 1 - self.sd.cs, self.click_cs),
                 checkbutton("A", self.sd.a, self.click_a),
                 checkbutton("B", self.sd.b, self.click_b),
             ]),
-            pair(
-                self.tx,
-                button("Send", self.send)
-            ),
-            pair(
-                self.rx,
-                button("Recv", self.click_a)
-            ),
+            pair(self.tx,               self.button_send),
+            pair(self.rx,               button("Recv", self.recv)),
         ]))
+
         self.refresh()
-
-        """
-        self.add(hbox)
-
-        button = Gtk.Button.new_with_label("Click Me")
-        button.connect("clicked", self.on_click_me_clicked)
-        hbox.pack_start(button, True, True, 0)
-
-        button = Gtk.Button.new_with_mnemonic("_Open")
-        button.connect("clicked", self.on_open_clicked)
-        hbox.pack_start(button, True, True, 0)
-
-        button = Gtk.Button.new_with_mnemonic("_Close")
-        button.connect("clicked", self.on_close_clicked)
-        hbox.pack_start(button, True, True, 0)
-
-        hbox.pack_start(self.hbox([self.checkbutton("A"), self.checkbutton("b")]), True, True, 0)
-
-        label = Gtk.Label()
-        label.set_text("This is a left-justified label.\nWith multiple lines.")
-        label.set_justify(Gtk.Justification.LEFT)
-        hbox.pack_start(label, True, True, 0)
-        self.label_voltage = label
-        """
         GLib.timeout_add(1000, self.refresh)
+
     def refresh(self):
         self.sd.getstatus()
         self.label_voltage.set_text("%.2f V" % self.sd.voltage)
@@ -113,33 +91,36 @@ class ButtonWindow(Gtk.Window):
         return True
 
     def click_cs(self, button):
-        print 'CS state', button.get_state(), Gtk.StateType.ACTIVE
         [self.sd.unsel, self.sd.sel][ison(button)]()
 
     def click_a(self, button):
-        self.sd.seta(int(button.get_state()))
+        self.sd.seta(ison(button))
 
     def click_b(self, button):
-        self.sd.setb(int(button.get_state()))
+        self.sd.setb(ison(button))
 
-    def on_click_me_clicked(self, button):
-        print("\"Click me\" button was clicked")
+    def edit(self, _):
+        b = self.tx.get_buffer()
+        valid = all([ishex(w) for w in b.get_text().split()])
+        self.button_send.set_sensitive(valid)
+
+    def transfer(self, byte):
+        byte = struct.unpack("B", self.sd.writeread(struct.pack("B", byte)))[0]
+        txb = self.tx.get_buffer()
+        txb.delete_text(0, -1)
+        rxb = self.rx.get_buffer()
+        rxb.set_text(rxb.get_text()[-17:] + " %02x" % byte, -1)
 
     def send(self, _):
         b = self.tx.get_buffer()
-        print b.get_text()
+        for w in b.get_text().split():
+            self.transfer(int(w, 16))
 
-        self.sd.write(struct.pack("B", int(b.get_text(), 16)))
-        b.delete_text(0, -1)
+    def recv(self, _):
+        self.transfer(0xff)
 
-    def on_open_clicked(self, button):
-        print("\"Open\" button was clicked")
-
-    def on_close_clicked(self, button):
-        print("Closing application")
-        Gtk.main_quit()
-
-win = ButtonWindow()
-win.connect("destroy", Gtk.main_quit)
-win.show_all()
-Gtk.main()
+if __name__ == '__main__':
+    win = SPIDriverWindow()
+    win.connect("destroy", Gtk.main_quit)
+    win.show_all()
+    Gtk.main()

@@ -1,4 +1,6 @@
+# coding=utf-8
 import gi
+
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib
 
@@ -52,7 +54,7 @@ class SPIDriverWindow(Gtk.Window):
 
         self.label_voltage = Gtk.Label()
         self.label_current = Gtk.Label()
-        self.label_temp    = Gtk.Label()
+        self.label_temp = Gtk.Label()
 
         self.tx = Gtk.Entry()
         self.tx.set_width_chars(20)

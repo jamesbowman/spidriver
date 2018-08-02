@@ -1,71 +1,98 @@
 import wx
 import time
 import threading
+from functools import partial
+
+from spidriver import SPIDriver
 
 import wx.lib.newevent as NE
 
-MooEvent, EVT_MOO = NE.NewEvent()
-GooEvent, EVT_GOO = NE.NewCommandEvent()
+MooEvent, EVT_PING = NE.NewEvent()
 
-DELAY = 0.7
-
-def evt_thr(win):
-    time.sleep(DELAY)
-    wx.PostEvent(win, MooEvent(moo=1))
-
-def cmd_thr(win, id):
-    time.sleep(DELAY)
-    wx.PostEvent(win, GooEvent(id, goo=id))
-
-ID_CMD1 = 100
-ID_CMD2 = 101
+def ping_thr(win):
+    while True:
+        time.sleep(1)
+        wx.PostEvent(win, MooEvent())
 
 class Frame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, -1, "MOO")
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        self.Bind(EVT_MOO, self.on_moo)
-        b = wx.Button(self, -1, "Generate MOO")
-        sizer.Add(b, 1, wx.EXPAND)
-        b.Bind(wx.EVT_BUTTON, self.on_evt_click)
-        b = wx.Button(self, ID_CMD1, "Generate GOO with %d" % ID_CMD1)
-        sizer.Add(b, 1, wx.EXPAND)
-        b.Bind(wx.EVT_BUTTON, self.on_cmd_click)
-        b = wx.Button(self, ID_CMD2, "Generate GOO with %d" % ID_CMD2)
-        sizer.Add(b, 1, wx.EXPAND)
-        b.Bind(wx.EVT_BUTTON, self.on_cmd_click)
 
-        self.Bind(EVT_GOO, self.on_cmd1, id=ID_CMD1)
-        self.Bind(EVT_GOO, self.on_cmd2, id=ID_CMD2)
+        self.sd = SPIDriver("/dev/ttyUSB0")
 
-        self.SetSizer(sizer)
+        def pair(a, b):
+            r = wx.BoxSizer(wx.HORIZONTAL)
+            r.Add(a, 1, wx.LEFT, border = 1)
+            r.Add(b, 0, wx.RIGHT, border = 1)
+            return r
+
+        def label(s):
+            return wx.StaticText(self, label = s)
+
+        def hbox(items):
+            r = wx.BoxSizer(wx.HORIZONTAL)
+            [r.Add(i) for i in items]
+            return r
+
+        def vbox(items):
+            r = wx.BoxSizer(wx.VERTICAL)
+            [r.Add(i, 0, wx.EXPAND) for i in items]
+            return r
+
+        wx.Frame.__init__(self, None, -1, "SPIDriver")
+
+        self.label_voltage = wx.StaticText(self, label = "-")
+        self.label_current = wx.StaticText(self, label = "-")
+        self.label_temp = wx.StaticText(self, label = "-")
+        self.label_uptime = wx.StaticText(self, label = "-")
+
+        self.refresh()
+
+        self.Bind(EVT_PING, self.on_ping)
+
+        ckCS = wx.CheckBox(self, label = "CS")
+        ckA = wx.CheckBox(self, label = "A")
+        ckB = wx.CheckBox(self, label = "B")
+        ckCS.SetValue(not self.sd.cs)
+        ckA.SetValue(self.sd.a)
+        ckB.SetValue(self.sd.b)
+        ckCS.Bind(wx.EVT_CHECKBOX, self.check_cs)
+        ckA.Bind(wx.EVT_CHECKBOX, self.check_a)
+        ckB.Bind(wx.EVT_CHECKBOX, self.check_b)
+
+        self.SetSizerAndFit(vbox([
+            pair(label("Voltage"), self.label_voltage),
+            pair(label("Current"), self.label_current),
+            pair(label("Temp."), self.label_temp),
+            pair(label("Running"), self.label_uptime),
+            hbox([ckCS, ckA, ckB]),
+            ]))
         self.SetAutoLayout(True)
-        sizer.Fit(self)
 
-    def on_evt_click(self, e):
-        t = threading.Thread(target=evt_thr, args=(self, ))
+        t = threading.Thread(target=ping_thr, args=(self, ))
         t.setDaemon(True)
         t.start()
 
-    def on_cmd_click(self, e):
-        t = threading.Thread(target=cmd_thr, args=(self, e.GetId()))
-        t.setDaemon(True)
-        t.start()
+    def on_ping(self, e):
+        self.refresh()
 
-    def show(self, msg, title):
-        dlg = wx.MessageDialog(self, msg, title, wx.OK)
-        dlg.ShowModal()
-        dlg.Destroy()
+    def refresh(self):
+        self.sd.getstatus()
+        self.label_voltage.SetLabel("%.2f V" % self.sd.voltage)
+        self.label_current.SetLabel("%d mA" % self.sd.current)
+        self.label_temp.SetLabel("%.1f C" % self.sd.temp)
+        self.label_uptime.SetLabel("%d" % self.sd.uptime)
 
-    def on_moo(self, e):
-        self.show("MOO = %s" % e.moo, "Got Moo")
+    def check_cs(self, e):
+        if e.EventObject.GetValue():
+            self.sd.sel()
+        else:
+            self.sd.unsel()
 
-    def on_cmd1(self, e):
-        self.show("goo = %s" % e.goo, "Got Goo (cmd1)")
+    def check_a(self, e):
+        self.sd.seta(e.EventObject.GetValue())
 
-    def on_cmd2(self, e):
-        self.show("goo = %s" % e.goo, "Got Goo (cmd2)")
-
+    def check_b(self, e):
+        self.sd.setb(e.EventObject.GetValue())
 
 app = wx.App(0)
 f = Frame()

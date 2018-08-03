@@ -115,18 +115,29 @@ class Frame(wx.Frame):
             label(""),
             hcenter(cb),
             label(""),
-            hcenter(vbox([
-                widepair(label("Serial"), self.label_serial),
-                widepair(label("Voltage"), self.label_voltage),
-                widepair(label("Current"), self.label_current),
-                widepair(label("Temp."), self.label_temp),
-                widepair(label("Running"), self.label_uptime),
-            ])),
+            hcenter(pair(
+                vbox([
+                    label("Serial"),
+                    label("Voltage"),
+                    label("Current"),
+                    label("Temp."),
+                    label("Running"),
+                ]),
+                vbox([
+                    self.label_serial,
+                    self.label_voltage,
+                    self.label_current,
+                    self.label_temp,
+                    self.label_uptime,
+                ])
+            )),
+
             label(""),
             rpair(label("MISO"), self.txMISO),
             rpair(label("MOSI"), self.txMOSI),
             label(""),
             hcenter(pair(self.ckCS, hbox([self.ckA, self.ckB]))),
+            label(""),
             hcenter(pair(self.txVal, txButton)),
             label(""),
             ])
@@ -151,7 +162,6 @@ class Frame(wx.Frame):
             pattern = "^usb-FTDI_FT230X_Basic_UART_(........)-"
 
         devs = os.listdir(devdir)
-        print(devs)
         def filter(d):
             m = re.match(pattern, d)
             if m:

@@ -92,24 +92,30 @@ class Frame(wx.Frame):
         self.ckA.Bind(wx.EVT_CHECKBOX, self.check_a)
         self.ckB.Bind(wx.EVT_CHECKBOX, self.check_b)
 
-        self.txMISO = wx.TextCtrl(self, style=wx.TE_READONLY | wx.TE_RIGHT | wx.TE_DONTWRAP)
-        self.txMOSI = wx.TextCtrl(self, style=wx.TE_READONLY | wx.TE_RIGHT | wx.TE_DONTWRAP)
-        self.txMISO.SetBackgroundColour(wx.Colour(224, 224, 224))
-        self.txMOSI.SetBackgroundColour(wx.Colour(224, 224, 224))
+        ps = self.GetFont().GetPointSize()
+        fmodern = wx.Font(ps, wx.MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+        def logger():
+            r = wx.TextCtrl(self, style=wx.TE_READONLY | wx.TE_RIGHT | wx.TE_DONTWRAP)
+            r.SetBackgroundColour(wx.Colour(224, 224, 224))
+            r.SetFont(fmodern)
+            return r
+        self.txMISO = logger()
+        self.txMOSI = logger()
 
         self.txVal = HexTextCtrl(self, size=wx.DefaultSize, style=0)
         self.txVal.SetMaxLength(2)
-        self.txVal.SetFont(wx.Font(14,
-                              wx.FONTFAMILY_TELETYPE,
+        self.txVal.SetFont(wx.Font(14 * ps // 10,
+                              wx.MODERN,
                               wx.FONTSTYLE_NORMAL,
                               wx.FONTWEIGHT_BOLD))
         txButton = wx.Button(self, label = "Transfer")
         txButton.Bind(wx.EVT_BUTTON, partial(self.transfer, self.txVal))
+        txButton.SetDefault()
 
         self.allw = [self.ckCS, self.ckA, self.ckB, self.txVal, txButton, self.txMISO, self.txMOSI]
         [w.Enable(False) for w in self.allw]
         self.devs = self.devices()
-        cb = wx.ComboBox(self, choices = sorted(self.devs.keys()))
+        cb = wx.ComboBox(self, choices = sorted(self.devs.keys()), style = wx.CB_READONLY)
         cb.Bind(wx.EVT_COMBOBOX, self.choose_device)
         vb = vbox([
             label(""),

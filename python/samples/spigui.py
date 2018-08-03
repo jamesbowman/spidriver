@@ -66,7 +66,7 @@ class Frame(wx.Frame):
         def hcenter(i):
             r = wx.BoxSizer(wx.HORIZONTAL)
             r.AddStretchSpacer(prop=1)
-            r.Add(i, 3, wx.CENTER)
+            r.Add(i, 2, wx.CENTER)
             r.AddStretchSpacer(prop=1)
             return r
 
@@ -161,6 +161,8 @@ class Frame(wx.Frame):
             devdir = "/dev/serial/by-id/"
             pattern = "^usb-FTDI_FT230X_Basic_UART_(........)-"
 
+        if not os.access(devdir, os.R_OK):
+            return {}
         devs = os.listdir(devdir)
         def filter(d):
             m = re.match(pattern, d)

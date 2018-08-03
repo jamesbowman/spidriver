@@ -35,7 +35,6 @@ class Frame(wx.Frame):
     def __init__(self):
 
         self.sd = None
-        print self.devices()
 
         def widepair(a, b):
             r = wx.BoxSizer(wx.HORIZONTAL)
@@ -146,7 +145,7 @@ class Frame(wx.Frame):
     def devices(self):
         if sys.platform == 'darwin':
             devdir = "/dev/"
-            pattern = "^tty.usbserial-(........)-"
+            pattern = "^tty.usbserial-(........)"
         else:
             devdir = "/dev/serial/by-id/"
             pattern = "^usb-FTDI_FT230X_Basic_UART_(........)-"
@@ -161,7 +160,7 @@ class Frame(wx.Frame):
         return dict([d for d in seldev if d])
 
     def connect(self, dev):
-        self.sd = SPIDriver("/dev/ttyUSB0")
+        self.sd = SPIDriver(dev)
         [w.Enable(True) for w in self.allw]
         self.ckCS.SetValue(not self.sd.cs)
         self.ckA.SetValue(self.sd.a)

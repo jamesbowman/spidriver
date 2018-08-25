@@ -116,9 +116,10 @@ class ST7735:
         self.writeData(w * h * struct.pack(">H", color))
 
     def start(self):
-        # self.sd.setb(0)
-        # time.sleep(.001)
+        self.sd.setb(0)
+        time.sleep(.001)
         self.sd.setb(1)
+        time.sleep(.001)
 
         self.cmd(SWRESET)  # Software reset, 0 args, w/delay
         time.sleep(.180)

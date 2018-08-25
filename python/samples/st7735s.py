@@ -83,13 +83,13 @@ DELAY = 0x80
 class ST7735:
     def __init__(self, sd):
         self.sd = sd
-        self.sd.setb(1)  # unselect
+        self.sd.unsel()
 
     def write(self, a, c):
         self.sd.seta(a)
-        self.sd.setb(0)  # select
+        self.sd.sel()
         self.sd.write(c)
-        self.sd.setb(1)  # unselect
+        self.sd.unsel()
 
     def writeCommand(self, cc):
         self.write(0, bytes([cc]))
@@ -116,6 +116,10 @@ class ST7735:
         self.writeData(w * h * struct.pack(">H", color))
 
     def start(self):
+        # self.sd.setb(0)
+        # time.sleep(.001)
+        self.sd.setb(1)
+
         self.cmd(SWRESET)  # Software reset, 0 args, w/delay
         time.sleep(.180)
         self.cmd(SLPOUT)  # Out of sleep mode, 0 args, w/delay

@@ -92,17 +92,19 @@ class ST7735:
         self.sd.unsel()
 
     def writeCommand(self, cc):
-        self.write(0, bytes([cc]))
+        self.write(0, struct.pack("B", cc))
 
     def writeData(self, c):
         self.write(1, c)
 
     def writeData1(self, cc):
-        self.writeData(bytes([cc]))
+        self.writeData(struct.pack("B", cc))
 
     def cmd(self, cc, args=()):
-        self.write(0, bytes([cc]))
-        self.writeData(bytes(args))
+        self.writeCommand(cc)
+        n = len(args)
+        if n != 0:
+            self.writeData(struct.pack(str(n) + "B", *args))
 
     def setAddrWindow(self, x0, y0, x1, y1):
         self.writeCommand(CASET)  # Column addr set
@@ -121,51 +123,51 @@ class ST7735:
         self.sd.setb(1)
         time.sleep(.001)
 
-        self.cmd(SWRESET)  # Software reset, 0 args, w/delay
+        self.cmd(SWRESET)   # Software reset, 0 args, w/delay
         time.sleep(.180)
-        self.cmd(SLPOUT)  # Out of sleep mode, 0 args, w/delay
+        self.cmd(SLPOUT)    # Out of sleep mode, 0 args, w/delay
         time.sleep(.180)
 
         commands = [
-            (FRMCTR1, (  # Frame rate ctrl - normal mode
+            (FRMCTR1, (     # Frame rate ctrl - normal mode
                 0x01, 0x2C, 0x2D)),  # Rate = fosc/(1x2+40) * (LINE+2C+2D)
-            (FRMCTR2, (  # Frame rate control - idle mode
+            (FRMCTR2, (     # Frame rate control - idle mode
                 0x01, 0x2C, 0x2D)),  # Rate = fosc/(1x2+40) * (LINE+2C+2D)
-            (FRMCTR3, (  # Frame rate ctrl - partial mode
+            (FRMCTR3, (     # Frame rate ctrl - partial mode
                 0x01, 0x2C, 0x2D,  # Dot inversion mode
                 0x01, 0x2C, 0x2D)),  # Line inversion mode
-            (PWCTR1, (  # Power control
+            (PWCTR1, (      # Power control
                 0xA2,
-                0x02,  # -4.6V
-                0x84)),  # AUTO mode
-            (PWCTR2, (  # Power control
-                0xC5,)),  # VGH25 = 2.4C VGSEL = -10 VGH = 3 * AVDD
-            (PWCTR3, (  # Power control
-                0x0A,  # Opamp current small
-                0x00)),  # Boost frequency
-            (PWCTR4, (  # Power control
-                0x8A,  # BCLK/2, Opamp current small & Medium low
+                0x02,       # -4.6V
+                0x84)),     # AUTO mode
+            (PWCTR2, (      # Power control
+                0xC5,)),    # VGH25 = 2.4C VGSEL = -10 VGH = 3 * AVDD
+            (PWCTR3, (      # Power control
+                0x0A,       # Opamp current small
+                0x00)),     # Boost frequency
+            (PWCTR4, (      # Power control
+                0x8A,       # BCLK/2, Opamp current small & Medium low
                 0x2A)),
-            (PWCTR5, (  # Power control
+            (PWCTR5, (      # Power control
                 0x8A, 0xEE)),
-            (VMCTR1, (  # VCOM control
+            (VMCTR1, (      # VCOM control
                 0x0E,)),
-            (MADCTL, (  # Memory access control (directions)
-                0xC8,)),  # row addr/col addr, bottom to top refresh
-            (COLMOD, (  # set color mode
-                0x05,)),  # 16-bit color
-            (GMCTRP1, (  # Gamma + polarity Correction Characterstics
+            (MADCTL, (      # Memory access control (directions)
+                0xC8,)),    # row addr/col addr, bottom to top refresh
+            (COLMOD, (      # set color mode
+                0x05,)),    # 16-bit color
+            (GMCTRP1, (     # Gamma + polarity Correction Characterstics
                 0x02, 0x1c, 0x07, 0x12,
                 0x37, 0x32, 0x29, 0x2d,
                 0x29, 0x25, 0x2B, 0x39,
                 0x00, 0x01, 0x03, 0x10)),
-            (GMCTRN1, (  # Gamma - polarity Correction Characterstics
+            (GMCTRN1, (     # Gamma - polarity Correction Characterstics
                 0x03, 0x1d, 0x07, 0x06,
                 0x2E, 0x2C, 0x29, 0x2D,
                 0x2E, 0x2E, 0x37, 0x3F,
                 0x00, 0x00, 0x02, 0x10)),
-            (NORON, ()),  # Normal display on
-            (DISPON, ()),  # Main screen turn on
+            (NORON, ()),    # Normal display on
+            (DISPON, ()),   # Main screen turn on
         ]
         for c, args in commands:
             self.cmd(c, args)

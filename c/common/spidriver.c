@@ -383,7 +383,7 @@ int spi_commands(SPIDriver *sd, int argc, char *argv[])
         spi_read(sd, bytes, nn);
         size_t i;
         for (i = 0; i < nn; i++)
-          printf("%s0x%02x", i ? "," : "", bytes[i]);
+          printf("%s0x%02x", i ? "," : "", 0xff & bytes[i]);
         printf("\n");
       }
       break;

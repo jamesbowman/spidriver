@@ -46,8 +46,15 @@ void ErrorExit(const char *func_name)
 
 HANDLE openSerialPort(const char *portname)
 {
+    char fullname[10];
+    const char *fmt;
+    if (portname[0] == 'C')
+        fmt = "\\\\.\\%s";
+    else
+        fmt == "%s";
+    snprintf(fullname, sizeof(fullname), fmt, portname);
     DWORD  accessdirection = GENERIC_READ | GENERIC_WRITE;
-    HANDLE hSerial = CreateFile((LPCSTR)portname,
+    HANDLE hSerial = CreateFile((LPCSTR)fullname,
         accessdirection,
         0,
         0,

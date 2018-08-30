@@ -85,14 +85,19 @@ static void is_connected(HWND hDlg)
 static void scan_ports(HWND cb)
 {
   TCHAR lpTargetPath[5000];
+  int count = 0;
 
-  for(int i=0; i<255; i++) {
+  for(int i=1; i<255; i++) {
     char ComName[10];
     sprintf(ComName, "COM%d", i);
-    if (QueryDosDevice(ComName, (LPSTR)lpTargetPath, 10000) != 0)
+    if (QueryDosDevice(ComName, (LPSTR)lpTargetPath, 10000) != 0) {
       SendMessage(cb, CB_ADDSTRING, 0, (WPARAM)ComName);
+      ++count;
+    }
   }
-  SendMessage(cb, CB_SETCURSEL, 0, 0);
+
+  if (count == 1)
+    SendMessage(cb, CB_SETCURSEL, -1, 0);
 }
 
 static void newdevice(HWND hDlg)

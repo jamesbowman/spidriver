@@ -77,15 +77,15 @@ BEGIN
   COMBOBOX                  COMBO_DEV,10,  10,  70, 39, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 
   LTEXT         "Serial",   999,      35,  30,  50,  10, SS_LEFT
-  RTEXT         "",         INF_S,    85,  30,  50,  10, SS_RIGHT
+  RTEXT         "-",        INF_S,    85,  30,  50,  10, SS_RIGHT
   LTEXT         "Voltage",  999,      35,  40,  50,  10, SS_LEFT
-  RTEXT         "0.000 V",  INF_V,    85,  40,  50,  10, SS_RIGHT
+  RTEXT         "-",        INF_V,    85,  40,  50,  10, SS_RIGHT
   LTEXT         "Current",  999,      35,  50,  50,  10, SS_LEFT
-  RTEXT         "0.000 V",  INF_C,    85,  50,  50,  10, SS_RIGHT
+  RTEXT         "-",        INF_C,    85,  50,  50,  10, SS_RIGHT
   LTEXT         "Temp.",    999,      35,  60,  50,  10, SS_LEFT
-  RTEXT         "0.0 C",    INF_T,    85,  60,  50,  10, SS_RIGHT
+  RTEXT         "-",        INF_T,    85,  60,  50,  10, SS_RIGHT
   LTEXT         "Running",  999,      35,  70,  50,  10, SS_LEFT
-  RTEXT         "0",        INF_U,    85,  70,  50,  10, SS_RIGHT
+  RTEXT         "-",        INF_U,    85,  70,  50,  10, SS_RIGHT
 
   LTEXT         "MISO",     999,      10,  90,  30,  10, SS_LEFT
   EDITTEXT                  MISO_LOG, 35,  90, 125,  10, WS_TABSTOP | ES_READONLY | ES_RIGHT | ES_AUTOHSCROLL

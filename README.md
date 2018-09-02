@@ -50,7 +50,7 @@ The default serial device is /dev/ttyUSB0 - but the SpiDriver() accepts paramete
     >>> s.unsel()             # end command
     >>>
 
-Note that this device is not current supported in [WSL](https://docs.microsoft.com/en-us/windows/wsl/about), as no device appears in /dev/
+Note that this device is not currently supported in [WSL](https://docs.microsoft.com/en-us/windows/wsl/about), as no device appears in /dev/
 
 Using the command line:
 

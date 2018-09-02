@@ -40,7 +40,19 @@ For example to read the 3-byte ID from this serial flash in Python:
     >>> s.unsel()             # end command
     >>>
 
-or using the command line:
+The default serial device is /dev/ttyUSB0 - but the SpiDriver() accepts parameters, so Windows users can specify a COM port:
+
+    >>> s = SpiDriver("COM16")
+    >>> s.sel()               # start command
+    >>> s.write(b'\x9f')      # command 9F is READ JEDEC ID 
+    >>> list(s.read(3))       # read next 3 bytes
+    [239, 64, 24]
+    >>> s.unsel()             # end command
+    >>>
+
+Note that this device is not currently supported in [WSL](https://docs.microsoft.com/en-us/windows/wsl/about), as no device appears in /dev/
+
+Using the command line:
 
     $ spi s t 0x9f r 3 u
     0xef,0x40,0x18

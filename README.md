@@ -52,7 +52,7 @@ The default serial device is /dev/ttyUSB0 - but the SpiDriver() accepts paramete
 
 Note that this device is not current supported in [WSL](https://docs.microsoft.com/en-us/windows/wsl/about), as no device appears in /dev/
 
-or using the command line:
+Using the command line:
 
     $ spi s t 0x9f r 3 u
     0xef,0x40,0x18

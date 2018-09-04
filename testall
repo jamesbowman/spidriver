@@ -3,7 +3,12 @@
 set -e
 
 cd python
-python setup.py install --user
+if [[ $TRAVIS_OS_NAME == 'osx' ]];
+then
+  python setup.py install
+else
+  python setup.py install --user
+fi
 cd ..
 python -c 'from spidriver import SPIDriver' 
 

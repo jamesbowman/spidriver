@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <memory.h>
 #include <fcntl.h>
+#include <sys/ioctl.h>
 #include <unistd.h>
 #include <errno.h>
 #define __STDC_FORMAT_MACROS

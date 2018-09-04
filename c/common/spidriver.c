@@ -127,8 +127,16 @@ int openSerialPort(const char *portname)
   }
 
   tcgetattr(fd, &Settings);
+#if defined(__APPLE__)
+  speed_t speed = 460800;
+  if (ioctl(fd, IOSSIOSPEED, &speed ) == -1) { 
+    perror("ioctl IOSSIOSPEED");
+    return -1;
+  }
+#else
   cfsetispeed(&Settings, B460800);
   cfsetospeed(&Settings, B460800);
+#endif
   cfmakeraw(&Settings);
   Settings.c_cc[VMIN] = 1;
   if (tcsetattr(fd, TCSANOW, &Settings) != 0) {

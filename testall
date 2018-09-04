@@ -1,7 +1,7 @@
 set -e
 
 cd python
-python setup.py install
+python setup.py install --user
 cd ..
 python -c 'from spidriver import SPIDriver' 
 

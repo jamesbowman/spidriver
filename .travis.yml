@@ -8,3 +8,6 @@ python:
 install:
   - pip install pyserial
 script: ./testall
+os:
+  - linux
+  - osx

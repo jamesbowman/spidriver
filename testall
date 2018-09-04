@@ -1,7 +1,5 @@
 set -e
 
-sudo pip install pyserial
-
 cd python
 python setup.py install
 cd ..

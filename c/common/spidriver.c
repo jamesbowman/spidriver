@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <memory.h>
 #include <fcntl.h>
+#include <sys/ioctl.h>
 #include <unistd.h>
 #include <errno.h>
 #define __STDC_FORMAT_MACROS
@@ -127,8 +128,13 @@ int openSerialPort(const char *portname)
   }
 
   tcgetattr(fd, &Settings);
+#if defined(__APPLE__) && !defined(B460800)
+#define B460800 460800
+#endif
+
   cfsetispeed(&Settings, B460800);
   cfsetospeed(&Settings, B460800);
+
   cfmakeraw(&Settings);
   Settings.c_cc[VMIN] = 1;
   if (tcsetattr(fd, TCSANOW, &Settings) != 0) {
@@ -141,14 +147,15 @@ int openSerialPort(const char *portname)
 
 size_t readFromSerialPort(int fd, char *b, size_t s)
 {
-  size_t n, t;
+  ssize_t n, t;
   t = 0;
   while (t < s) {
     n = read(fd, b + t, s);
-    t += n;
+    if (n > 0)
+      t += n;
   }
 #ifdef VERBOSE
-  printf(" READ %d %d: ", (int)s, int(n));
+  printf(" READ %d %d: ", (int)s, (int)n);
   int i;
   for (i = 0; i < s; i++)
     printf("%02x ", 0xff & b[i]);

@@ -9,27 +9,15 @@ import time
 from PIL import Image
 from spidriver import SPIDriver
 
-try:
-    # First choice, use Numpy
-    import numpy as np
-
-
-    def as565(im):
-        """ Return RGB565 of im """
-        (r, g, b) = [np.array(c).astype(np.uint16) for c in im.split()]
-
-        def s(x, n):
-            return (x * (2 ** n - 1) / 255).astype(np.uint16)
-
-        return ((s(b, 5) << 11) | (s(g, 6) << 5) | s(r, 5)).flatten().astype('>u2').tobytes()
-except ImportError:
-    # Second choice, Pillow's BGR;16 support
-    def as565(im):
-        r, g, b = im.convert("RGB").split()
-        bgr = Image.merge("RGB", (b, g, r))
-        a = array.array("H", bgr.convert("BGR;16").tobytes())
-        a.byteswap()
-        return a.tobytes()
+# Pure Python rgb to 565 encoder for portablity
+def as565(im):
+    rr, gg, bb = [list(c.getdata()) for c in im.convert("RGB").split()]
+    def s(x, n):
+        return x * (2 ** n - 1) // 255
+    d565 = [(s(b, 5) << 11) | (s(g, 6) << 5) | s(r, 5) for (r,g,b) in zip(rr, gg, bb)]
+    d565h = array.array('H', d565)
+    d565h.byteswap()
+    return array.array('B', d565h.tostring())
 
 NOP = 0x00
 SWRESET = 0x01

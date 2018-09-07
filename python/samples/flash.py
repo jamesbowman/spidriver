@@ -15,52 +15,86 @@ def hexdump(s):
     def hexline(s):
         bb = struct.unpack("16B", s)
         return (" ".join(["%02x" % c for c in bb]).ljust(49) +
-                "|" +
-                "".join([toprint(c) for c in bb]).ljust(16) +
-                "|")
+                "|" + "".join([toprint(c) for c in bb]).ljust(16) + "|")
     return "\n".join([hexline(s[i:i+16]) for i in range(0, len(s), 16)])
-
-def rnd(n):
-    return random.randrange(n)
-
-
-def pattern(n):
-    return [rnd(256) for i in range(n)]
 
 if __name__ == '__main__':
     try:
-        optlist, args = getopt.getopt(sys.argv[1:], "h:")
+        optlist, args = getopt.getopt(sys.argv[1:], "h:r:w:")
     except getopt.GetoptError as reason:
         print()
-        print('usage: st7735 [ -h device ] image...')
+        print('usage: flash [ -h device ] [ -r file ] [ -w file ]')
         print()
         print()
         sys.exit(1)
     optdict = dict(optlist)
 
     s = SPIDriver(optdict.get('-h', "/dev/ttyUSB0"))
+    s.seta(0)
     s.unsel()
 
-    while True:
-        s.sel()               # start command
-        s.write(b'\x9f')      # command 9F is READ JEDEC ID 
-        ids = s.read(3)
-        (id1, id2, id3) = struct.unpack("BBB", ids)
-        print ("JEDEC ID: %02x %02x %02x" % (id1, id2, id3))
-        s.unsel()             # end command
-        time.sleep(.02)
-        if id1 not in (0x00, 0xff):
-            break
-
-    for c in (0x66, 0x99):
-        s.sel()               # start command
-        s.write(bytes([c]))
+                                # Some primitives for generic flash
+    def command(b):
         s.unsel()
-        time.sleep(.2)
+        s.sel()
+        s.write(b)
 
-    s.sel()               # start command
-    s.write([0x03, 0x00, 0x00, 0x00])
-    page = s.read(256)
-    print(hexdump(page))
-    s.unsel()             # end command
-    time.sleep(.02)
+    def idcode():
+        command([0x9f])
+        return s.read(3)
+
+    def write_enable():
+        command([0x06])
+
+    def wait_ready():
+        while True:
+            command([0x05])
+            (r,) = struct.unpack("B", s.read(1))
+            if (r & 1) == 0:
+                break
+
+    def addr24(a):
+        return [(a >> 16) & 0xff, (a >> 8) & 0xff, a & 0xff]
+
+    def page_program(a, b256):
+        # print('page_program', a)
+        write_enable()
+        command([0x02] + addr24(a))
+        s.write(b256)
+        wait_ready()
+
+    def erase_sector(a):
+        # print('erase sector', a)
+        write_enable()
+        command([0xd8] + addr24(a))
+        wait_ready()
+
+    def read(a):
+        command([0x03] + addr24(a))
+
+    while True:
+        ids = struct.unpack("BBB", idcode())
+        print("Got JEDEC ID: %02x %02x %02x" % ids)
+        if ids[0] not in (0x00, 0xff) and (8 <= ids[2] < 22):
+            break
+    size = 1 << ids[2]
+    print("Flash size is %d bytes" % size)
+
+    if '-r' in optdict:
+        read(0)
+        chunk = 8 * 1024
+        with open(optdict['-r'], "wb") as f:
+            for a in range(0, size, chunk):
+                f.write(s.read(chunk))
+                print("%d/%d KBytes" % (a / 1024, size / 1024))
+    if '-w' in optdict:
+        write_enable()
+        command([0xc7])
+        wait_ready()
+        with open(optdict['-w'], "rb") as f:
+            for a in range(0, size, 256):
+                page_program(a, f.read(256))
+                print("%d/%d KBytes" % (a / 1024, size / 1024))
+    s.unsel()
+    s.seta(1)
+    s.detach()

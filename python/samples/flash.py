@@ -20,10 +20,10 @@ def hexdump(s):
 
 if __name__ == '__main__':
     try:
-        optlist, args = getopt.getopt(sys.argv[1:], "h:r:w:")
+        optlist, args = getopt.getopt(sys.argv[1:], "h:r:w:s:")
     except getopt.GetoptError as reason:
         print()
-        print('usage: flash [ -h device ] [ -r file ] [ -w file ]')
+        print('usage: flash [ -h device ] [ -r file ] [ -w file ] [-s size]')
         print()
         print()
         sys.exit(1)
@@ -32,6 +32,8 @@ if __name__ == '__main__':
     s = SPIDriver(optdict.get('-h', "/dev/ttyUSB0"))
     s.seta(0)
     s.unsel()
+
+    size = int(optdict.get('-s', "0"))
 
                                 # Some primitives for generic flash
     def command(b):
@@ -75,9 +77,12 @@ if __name__ == '__main__':
     while True:
         ids = struct.unpack("BBB", idcode())
         print("Got JEDEC ID: %02x %02x %02x" % ids)
+        if size > 0:
+            break
         if ids[0] not in (0x00, 0xff) and (8 <= ids[2] < 22):
             break
-    size = 1 << ids[2]
+    if size == 0:
+        size = 1 << ids[2]
     print("Flash size is %d bytes" % size)
 
     if '-r' in optdict:

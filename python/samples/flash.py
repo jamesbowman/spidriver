@@ -79,7 +79,7 @@ if __name__ == '__main__':
         print("Got JEDEC ID: %02x %02x %02x" % ids)
         if size > 0:
             break
-        if ids[0] not in (0x00, 0xff) and (8 <= ids[2] < 22):
+        if ids[0] not in (0x00, 0xff) and (1 <= ids[2] < 22):
             break
     if size == 0:
         size = 1 << ids[2]

@@ -17,4 +17,11 @@ and there are included drivers for
 
 ![front](/images/DSC_1313a.JPG)
 
+## Contributed language bindings
+
+The following bindings were contributed by SPIDriver community members:
+
+* **.net** https://github.com/alandoherty/spidriver-net
+* **rust** https://docs.rs/spidriver/0.1.0/spidriver/
+
 [spidriver.com](https://spidriver.com)

@@ -17,5 +17,8 @@ setup(name='spidriver',
       long_description=LONG,
       license='GPL',
       py_modules=['spidriver'],
-      install_requires=['pyserial']
+      install_requires=['pyserial'],
+      project_urls={
+        'Documentation': 'https://spidriver.readthedocs.io/en/latest/',
+      }
       )

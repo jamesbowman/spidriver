@@ -1,0 +1,13 @@
+set -e
+
+# pip install --upgrade --force-reinstall ..
+make html
+if [ -x "$(command -v xdotool)" ]; then
+  CUR_WID=$(xdotool getwindowfocus)
+  for WID in $(xdotool search --onlyvisible --name 'spidriver')
+  do
+    xdotool windowactivate $WID
+    xdotool key 'ctrl+r'
+  done
+  xdotool windowactivate $CUR_WID
+fi

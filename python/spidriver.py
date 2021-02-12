@@ -3,7 +3,7 @@ import sys
 
 import serial
 
-__version__ = '0.0.2'
+__version__ = '1.0.0'
 
 PYTHON2 = (sys.version_info < (3, 0))
 
@@ -12,18 +12,22 @@ class SPIDriver:
     """
     SPIDriver interface.
 
-    The following variables are available:
+    :param port: The USB port to connect to
+    :type port: str
 
-        product     product code e.g. 'spidriver1'
-        serial      serial string of SPIDriver
-        uptime      time since SPIDriver boot, in seconds
-        voltage     USB voltage, in V
-        current     current used by attached device, in mA
-        temp        temperature, in degrees C
-        cs          state of CS pin
-        a           state of A pin
-        b           state of B pin
-        ccitt_crc   CCITT-16 CRC of all transmitted and received bytes
+    After connection, the following object variables reflect the current values of the SPIDriver.
+    They are updated by calling :py:meth:`getstatus`.
+
+    :ivar product:     product code e.g. 'spidriver1'
+    :ivar serial:      serial string of SPIDriver
+    :ivar uptime:      time since SPIDriver boot, in seconds
+    :ivar voltage:     USB voltage, in V
+    :ivar current:     current used by attached device, in mA
+    :ivar temp:        temperature, in degrees C
+    :ivar cs:          state of CS pin
+    :ivar a:           state of A pin
+    :ivar b:           state of B pin
+    :ivar ccitt_crc:   CCITT-16 CRC of all transmitted and received bytes
 
     """
 
@@ -62,7 +66,7 @@ class SPIDriver:
             return r[0]
 
     def detach(self):
-        """ Detach all signals """
+        """ Detach all signals, leaving them all to float. """
         self.ser.write(b'x')
 
     def sel(self):
@@ -74,7 +78,13 @@ class SPIDriver:
         self.ser.write(b'u')
 
     def read(self, l):
-        """ Read l bytes from the SPI device """
+        """
+        Read l bytes from the SPI device
+
+        :param int l: number of bytes to read
+        :return bytes: received bytes, length ``l``
+
+        """
         r = []
         for i in range(0, l, 64):
             rem = min(l - i, 64)
@@ -83,14 +93,23 @@ class SPIDriver:
         return b''.join(r)
 
     def write(self, bb):
-        """ Write bb to the SPI device """
+        """
+        Write bb to the SPI device
+        
+        :param bytes bb: bytes to write to the SPI device
+        """
         for i in range(0, len(bb), 64):
             sub = bb[i:i + 64]
             self.__ser_w([0xc0 + len(sub) - 1])
             self.__ser_w(sub)
 
     def writeread(self, bb):
-        """ Write bb to the SPI device, return the read bytes """
+        """
+        Write bytes to the SPI device, return the read bytes
+        
+        :param bytes bb: bytes to write to the SPI device
+        :return bytes: received bytes, same length as ``bb``
+        """
         r = []
         ST = 64
         for i in range(0, len(bb), ST):

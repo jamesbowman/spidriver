@@ -1,6 +1,7 @@
 ![logo](/images/logo.png)
 
 [![Build Status](https://travis-ci.org/jamesbowman/spidriver.svg?branch=master)](https://travis-ci.org/jamesbowman/spidriver)
+[![Documentation Status](https://readthedocs.org/projects/spidriver/badge/?version=latest)](https://spidriver.readthedocs.io/en/latest/?badge=latest)
 
 Full documentation is at
 [spidriver.com](https://spidriver.com).

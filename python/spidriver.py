@@ -3,7 +3,7 @@ import sys
 
 import serial
 
-__version__ = '1.0.0'
+__version__ = '1.1.0'
 
 PYTHON2 = (sys.version_info < (3, 0))
 

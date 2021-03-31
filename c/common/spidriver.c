@@ -280,6 +280,7 @@ void spi_getstatus(SPIDriver *sd)
     &sd->cs,
     &sd->ccitt_crc
     );
+  sd->mode = 0;
 }
 
 void spi_sel(SPIDriver *sd)
@@ -306,6 +307,15 @@ void spi_setb(SPIDriver *sd, char v)
   char cmd[2] = {'b', v};
   writeToSerialPort(sd->port, cmd, 2);
   sd->b = v;
+}
+
+void spi_setmode(SPIDriver *sd, char m)
+{
+  if (strcmp(sd->model, "spidriver2") == 0) {
+    char cmd[2] = {'m', m};
+    writeToSerialPort(sd->port, cmd, 2);
+    sd->mode = m;
+  }
 }
 
 void spi_write(SPIDriver *sd, const char bytes[], size_t nn)
@@ -416,6 +426,12 @@ int spi_commands(SPIDriver *sd, int argc, char *argv[])
         spi_setb(sd, token[0]);
       break;
 
+    case 'm':
+      token = argv[++i];
+      if (token != NULL)
+        spi_setmode(sd, token[0]);
+      break;
+
     default:
     badcommand:
       fprintf(stderr, "Bad command '%s'\n", token);
@@ -429,6 +445,7 @@ int spi_commands(SPIDriver *sd, int argc, char *argv[])
       fprintf(stderr, "  r N   read N bytes from SPI\n");
       fprintf(stderr, "  a 0/1 Set A line\n");
       fprintf(stderr, "  b 0/1 Set B line\n");
+      fprintf(stderr, "  m 0-3 Set SPI mode (spidriver2 only)\n");
       fprintf(stderr, "\n");
 
       return 1;

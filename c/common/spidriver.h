@@ -19,6 +19,7 @@ typedef struct {
             current_ma,   // device current (mA)
             temp_celsius; // temperature (C)
   unsigned int a, b, cs;  // state of three output lines
+  unsigned int mode;      // SPI mode
   unsigned int
             ccitt_crc,    // Hardware CCITT CRC
             e_ccitt_crc;  // Host CCITT CRC, should match

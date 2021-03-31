@@ -18,7 +18,7 @@ class SPIDriver:
     After connection, the following object variables reflect the current values of the SPIDriver.
     They are updated by calling :py:meth:`getstatus`.
 
-    :ivar product:     product code e.g. 'spidriver1'
+    :ivar product:     product code e.g. 'spidriver1' or 'spidriver2'
     :ivar serial:      serial string of SPIDriver
     :ivar uptime:      time since SPIDriver boot, in seconds
     :ivar voltage:     USB voltage, in V
@@ -127,11 +127,22 @@ class SPIDriver:
         """ Set the B signal to 0 or 1 """
         self.__ser_w([ord('b'), v])
 
+    def setmode(self, m):
+        assert m in (0, 1, 2, 3)
+        if self.product == 'spidriver1':
+            if mode != 0:
+                raise IOError
+        elif self.product == 'spidriver2':
+            self.__ser_w([ord('m'), m])
+        else:
+            assert 0, "Unrecognized product"
+
     def getstatus(self):
         """ Update all status variables """
         self.ser.write(b'?')
         r = self.ser.read(80)
         body = r[1:-1].decode()  # remove [ and ]
+        fields = body.split()
         (self.product,
          self.serial,
          uptime,
@@ -141,7 +152,7 @@ class SPIDriver:
          a,
          b,
          cs,
-         ccitt_crc) = body.split()
+         ccitt_crc) = fields[:10]
         self.uptime = int(uptime)
         self.voltage = float(voltage)
         self.current = float(current)
@@ -150,6 +161,10 @@ class SPIDriver:
         self.b = int(b)
         self.cs = int(cs)
         self.ccitt_crc = int(ccitt_crc, 16)
+        if self.product == 'spidriver2':
+            self.mode = int(fields[10])
+        else:
+            self.mode = 0
 
     def __repr__(self):
         return "<%s serial=%s uptime=%d>" % (

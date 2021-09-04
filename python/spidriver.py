@@ -128,6 +128,7 @@ class SPIDriver:
         self.__ser_w([ord('b'), v])
 
     def setmode(self, m):
+        """ Set the SPI mode to 0,1,2 or 3 """
         assert m in (0, 1, 2, 3)
         if self.product == 'spidriver1':
             if mode != 0:

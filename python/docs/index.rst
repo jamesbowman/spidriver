@@ -67,5 +67,6 @@ Module Contents
       writeread,
       seta,
       setb,
+      setmode,
       getstatus
 

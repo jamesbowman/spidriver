@@ -9,7 +9,7 @@ import struct
 
 from spidriver import SPIDriver
 
-def ison(button): return button.get_state() == Gtk.StateType.ACTIVE
+def ison(button): return (button.get_state_flags() & Gtk.StateFlags.CHECKED) != 0
 def ishex(s): return re.match("[0-9a-fA-F]{2}$", s) is not None
 
 class SPIDriverWindow(Gtk.Window):

@@ -42,13 +42,13 @@ class SPIDriverWindow(Gtk.Window):
             return r
 
         def checkbutton(name, state, click):
-            r = Gtk.CheckButton(name)
+            r = Gtk.CheckButton(label=name)
             r.set_active(state)
             r.connect("clicked", click)
             return r
 
         def button(name, click):
-            r = Gtk.Button(name)
+            r = Gtk.Button(label=name)
             r.connect("clicked", click)
             return r
 

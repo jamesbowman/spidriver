@@ -359,7 +359,7 @@ void spi_writeread(SPIDriver *sd, char bytes[], size_t nn)
 
 int spi_commands(SPIDriver *sd, int argc, char *argv[])
 {
-  int i;
+  int i, loop_start = -1, loop_repeat = 0;
 
   for (i = 0; i < argc; i++) {
     char *token = argv[i];
@@ -367,6 +367,33 @@ int spi_commands(SPIDriver *sd, int argc, char *argv[])
     if (strlen(token) != 1)
       goto badcommand;
     switch (token[0]) {
+
+    case 'R':
+      {
+        token = argv[++i];
+        if (token == NULL) {
+          fprintf(stderr, "Expected repeat count\n");
+          return 1;
+        }
+        loop_start = i;
+        loop_repeat = strtol(token, NULL, 0);
+      }
+      break;
+
+    case 'L':
+      {
+        if (loop_start < 0) {
+          fprintf(stderr, "Loop with repeat\n");
+          return 1;
+        }
+        if (loop_repeat == 0) {
+          loop_start = -1;
+          break;
+        }
+        loop_repeat--;
+        i = loop_start;
+      }
+      break;
 
     case 'i':
       spi_getstatus(sd);
@@ -463,6 +490,9 @@ int spi_commands(SPIDriver *sd, int argc, char *argv[])
       fprintf(stderr, "  a 0/1 Set A line\n");
       fprintf(stderr, "  b 0/1 Set B line\n");
       fprintf(stderr, "  m 0-3 Set SPI mode (spidriver2 only)\n");
+      fprintf(stderr, "\n");
+      fprintf(stderr, "  R N   repeat next commands N times\n");
+      fprintf(stderr, "  L     loop back to repeat point\n");
       fprintf(stderr, "\n");
 
       return 1;

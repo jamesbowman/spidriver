@@ -359,7 +359,7 @@ void spi_writeread(SPIDriver *sd, char bytes[], size_t nn)
 
 int spi_commands(SPIDriver *sd, int argc, char *argv[])
 {
-  int i;
+  int i, loop_start = -1, loop_repeat = 0;
 
   for (i = 0; i < argc; i++) {
     char *token = argv[i];
@@ -367,6 +367,33 @@ int spi_commands(SPIDriver *sd, int argc, char *argv[])
     if (strlen(token) != 1)
       goto badcommand;
     switch (token[0]) {
+
+    case 'R':
+      {
+        token = argv[++i];
+        if (token == NULL) {
+          fprintf(stderr, "Expected repeat count\n");
+          return 1;
+        }
+        loop_start = i;
+        loop_repeat = strtol(token, NULL, 0);
+      }
+      break;
+
+    case 'L':
+      {
+        if (loop_start < 0) {
+          fprintf(stderr, "Loop with repeat\n");
+          return 1;
+        }
+        if (loop_repeat == 0) {
+          loop_start = -1;
+          break;
+        }
+        loop_repeat--;
+        i = loop_start;
+      }
+      break;
 
     case 'i':
       spi_getstatus(sd);
@@ -385,6 +412,10 @@ int spi_commands(SPIDriver *sd, int argc, char *argv[])
     case 't':
       {
         token = argv[++i];
+        if (token == NULL) {
+          fprintf(stderr, "Expected values to write\n");
+          return 1;
+        }
         char bytes[8192], *endptr = token;
         size_t nn = 0;
         while (nn < sizeof(bytes)) {
@@ -404,6 +435,10 @@ int spi_commands(SPIDriver *sd, int argc, char *argv[])
     case 'r':
       {
         token = argv[++i];
+        if (token == NULL) {
+          fprintf(stderr, "Expected a number of bytes to read\n");
+          return 1;
+        }
         size_t nn = strtol(token, NULL, 0);
         char bytes[8192];
         spi_read(sd, bytes, nn);
@@ -416,20 +451,29 @@ int spi_commands(SPIDriver *sd, int argc, char *argv[])
 
     case 'a':
       token = argv[++i];
-      if (token != NULL)
-        spi_seta(sd, token[0]);
+      if (token == NULL) {
+        fprintf(stderr, "Expected value for A line\n");
+        return 1;
+      }
+      spi_seta(sd, token[0]);
       break;
 
     case 'b':
       token = argv[++i];
-      if (token != NULL)
-        spi_setb(sd, token[0]);
+      if (token == NULL) {
+        fprintf(stderr, "Expected value for B line\n");
+        return 1;
+      }
+      spi_setb(sd, token[0]);
       break;
 
     case 'm':
       token = argv[++i];
-      if (token != NULL)
-        spi_setmode(sd, token[0]);
+      if (token == NULL) {
+        fprintf(stderr, "Expected value for mode\n");
+        return 1;
+      }
+      spi_setmode(sd, token[0]);
       break;
 
     default:
@@ -446,6 +490,9 @@ int spi_commands(SPIDriver *sd, int argc, char *argv[])
       fprintf(stderr, "  a 0/1 Set A line\n");
       fprintf(stderr, "  b 0/1 Set B line\n");
       fprintf(stderr, "  m 0-3 Set SPI mode (spidriver2 only)\n");
+      fprintf(stderr, "\n");
+      fprintf(stderr, "  R N   repeat next commands N times\n");
+      fprintf(stderr, "  L     loop back to repeat point\n");
       fprintf(stderr, "\n");
 
       return 1;

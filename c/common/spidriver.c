@@ -149,7 +149,7 @@ int openSerialPort(const char *portname)
 
 size_t readFromSerialPort(int fd, char *b, size_t s)
 {
-  ssize_t n, t;
+  size_t n, t;
   t = 0;
   while (t < s) {
     n = read(fd, b + t, s);
@@ -168,7 +168,7 @@ size_t readFromSerialPort(int fd, char *b, size_t s)
 
 void writeToSerialPort(int fd, const char *b, size_t s)
 {
-  write(fd, b, s);
+  size_t  _ __attribute__((unused)) = write(fd, b, s);
 #ifdef VERBOSE
   printf("WRITE %u: ", (int)s);
   int i;
@@ -268,7 +268,7 @@ void spi_getstatus(SPIDriver *sd)
   bytesRead = readFromSerialPort(sd->port, readbuffer, 80);
   readbuffer[bytesRead] = 0;
   // printf("%d Bytes were read: %.*s\n", bytesRead, bytesRead, readbuffer);
-  sscanf(readbuffer, "[%15s %8s %" SCNu64 " %f %f %f %d %d %d %x ]",
+  sscanf(readbuffer, "[%15s %8s %" SCNu64 " %f %f %f %u %u %u %x ]",
     sd->model,
     sd->serial,
     &sd->uptime,

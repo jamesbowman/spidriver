@@ -17,7 +17,8 @@ def as565(im):
     d565 = [(s(b, 5) << 11) | (s(g, 6) << 5) | s(r, 5) for (r,g,b) in zip(rr, gg, bb)]
     d565h = array.array('H', d565)
     d565h.byteswap()
-    return array.array('B', d565h.tostring())
+    #tostring method is deprecated
+    return array.array('B', d565h.tobytes())
 
 NOP = 0x00
 SWRESET = 0x01

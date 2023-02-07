@@ -4,7 +4,7 @@ spidriver
 .. image:: /images/spidriver-main-600.jpg
    :target: https://spidriver.com
 
-`SPIDriver <https:spidriver.com>`_
+`SPIDriver <https://spidriver.com>`_
 is an easy-to-use, open source tool for controlling SPI devices over USB.
 It works with Windows, Mac, and Linux, and has a built-in color screen
 that shows a live "dashboard" of all the SPI activity.

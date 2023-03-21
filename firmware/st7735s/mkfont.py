@@ -1,4 +1,4 @@
-import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 import struct
 import random
@@ -10,7 +10,7 @@ def as565(im):
     """ Return RGB565 of im """
     (r,g,b) = [np.array(c).astype(np.uint16) for c in im.split()]
     def s(x, n):
-        return x * (2 ** n - 1) / 255
+        return x * (2 ** n - 1) // 255
     return (s(b, 5) << 11) | (s(g, 6) << 5) | s(r, 5)
 
 def c3(rgb):
@@ -32,7 +32,7 @@ def rfont2(c):
         extents = (0, 0, 10 + 8, 45 + 9)
     im = im.crop((10, 45) + extents[2:])
     (w,h) = im.size
-    nyb = (np.array(im).astype(int).flatten() * 15 / 255).tolist()
+    nyb = (np.array(im).astype(int).flatten() * 15 // 255).tolist()
     return [w,h] + nyb
 
 def cwidth(c):
@@ -47,7 +47,7 @@ if 0:
     dr.text((10,40), "0123456789ABCDEF.Vm", font=font1, fill=255)
     im = im.crop(im.getbbox())
     (w,h) = im.size
-    print w,h
+    print (w, h)
     im.save("out.png")
 else:
     im = Image.new("RGB", (128, 160))
@@ -57,7 +57,7 @@ else:
     measc = (0xe0,) * 3
     # dr.text((77,0), "230 mA", font=font2, fill=measc)
     for i in range(10):
-        c = 255 * i / 9
+        c = 255 * i // 9
         dr.text((i * 8, 0), "L", font=font2, fill=(c,c,c))
     dr.text((77,20), "4.985 V", font=font2, fill=measc)
     fs.write('here constant tplan\n')
@@ -73,7 +73,7 @@ else:
         y = 41 + 21 * i
         (y0, y1) = (y + 5, y + 13)
         lev = rand(2)
-        cd = tuple([2*m/3 for m in c])
+        cd = tuple([2*m//3 for m in c])
         s = 2
         for x in range(0, 90, s):
             dr.line((x - s, (y0,y1)[lev], x, (y0,y1)[lev]), fill=cd)
@@ -81,8 +81,8 @@ else:
                 dr.line((x, (y0,y1)[lev], x, (y1,y0)[lev]), fill=cd)
                 lev = 1 - lev
         dr.text((112 - w/2, y), l, font=font2, fill=c)
-        (r,g,b) = [v/16 for v in c]
-        fs.write('%d , %d , $%x%x , $%x , ," %s"\n' % (112 - w/2 + dx, y + 2, r, g, b, l))
+        (r,g,b) = [v//16 for v in c]
+        fs.write('%d , %d , $%x%x , $%x , ," %s"\n' % (112 - w//2 + dx, y + 2, r, g, b, l))
         fb += 5 + len(l)
         fs.write("[ %d ]\n" % fb)
     fs.write('%d , %d , $%x%x , $%x , ," %s"\n' % (45, 12, 0xf, 0xf, 0xf, "V"))
@@ -97,7 +97,7 @@ else:
     im.save("out.png")
 
 # im = Image.open("felix.png")
-f = open("img", "w")
+f = open("img", "wb")
 f.write(struct.pack("<2H", *im.size))
 f.write((as565(im.convert("RGB"))).flatten().astype('>u2').tostring())
 
@@ -111,7 +111,7 @@ def encode(font, c):
     nyb = (np.array(im).flatten() * 10 / 255).tolist()
     return nyb
 
-    print c, "".join(["%x" % x for x in nyb])
+    print (c, "".join(["%x" % x for x in nyb]))
     saved = 0
     for i in range(len(nyb)):
         if nyb[i:i+3] == [0,0,0]:
@@ -119,11 +119,11 @@ def encode(font, c):
     # print c, "saved", saved
     return len(nyb) - saved
 
-print 'font1 takes', sum([len(encode(font1, c)) for c in "0123456789A.Vm"]) / 2, 'bytes'
+print('font1 takes', sum([len(encode(font1, c)) for c in "0123456789A.Vm"]) / 2, 'bytes')
 
 uniq = "".join(sorted(set("SCKMISOMOSICSAB0123456789.mAV")))
 f2 = sum([rfont2(c) for c in uniq], [])
-print "font2 %s takes %d bytes" % (uniq, len(f2) / 2)
+print("font2 %s takes %d bytes" % (uniq, len(f2) / 2))
 
 im = Image.new("L", (128, 160))
 dr = ImageDraw.Draw(im)
@@ -139,7 +139,8 @@ def nybbles(nn):
 fs.write('here constant font\n')
 for c in uniq:
     bb = nybbles(rfont2(c))
-    print >>fs, "'%s' , " % c, " ".join(bb)
+    fs.write("'%s' , " % c)
+    fs.write(" ".join(bb))
     fb += 1 + len(bb)
 
 # See http://angband.pl/font/tinyfont.html

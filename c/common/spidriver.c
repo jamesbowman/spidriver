@@ -311,7 +311,8 @@ void spi_setb(SPIDriver *sd, char v)
 
 void spi_setmode(SPIDriver *sd, char m)
 {
-  if (strcmp(sd->model, "spidriver2") == 0) {
+  if ((strcmp(sd->model, "spidriver2") == 0) ||
+      (strcmp(sd->model, "spidriverq") == 0)) {
     char cmd[2] = {'m', m};
     writeToSerialPort(sd->port, cmd, 2);
     sd->mode = m;
@@ -489,7 +490,7 @@ int spi_commands(SPIDriver *sd, int argc, char *argv[])
       fprintf(stderr, "  r N   read N bytes from SPI\n");
       fprintf(stderr, "  a 0/1 Set A line\n");
       fprintf(stderr, "  b 0/1 Set B line\n");
-      fprintf(stderr, "  m 0-3 Set SPI mode (spidriver2 only)\n");
+      fprintf(stderr, "  m 0-3 Set SPI mode (spidriver2/spidriverq only)\n");
       fprintf(stderr, "\n");
       fprintf(stderr, "  R N   repeat next commands N times\n");
       fprintf(stderr, "  L     loop back to repeat point\n");

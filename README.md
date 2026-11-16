@@ -18,6 +18,11 @@ and there are included drivers for
 
 ![front](/images/DSC_1313a.JPG)
 
+## Releasing
+
+See [RELEASING.md](RELEASING.md) for instructions on publishing Python releases
+to PyPI with Trusted Publishing and provenance.
+
 ## Contributed language bindings
 
 The following bindings were contributed by SPIDriver community members:

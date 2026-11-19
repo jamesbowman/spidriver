@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="530" height="380" viewBox="0 0 530 380">
+<rect width="100%" height="100%" fill="#20262b"/>
+<rect x="10.0" y="18.0" width="510.0" height="210.0" rx="12.0" fill="#1a6b43"/>
+<rect x="10.0" y="18.0" width="510.0" height="210.0" rx="12.0" fill="#1a6b43" stroke="#123f27" stroke-width="1"/>
+<rect x="-16.0" y="83.0" width="26.0" height="80.0" rx="3.0" fill="#b9bec3"/>
+<rect x="-2.0" y="91.0" width="12.0" height="64.0" rx="0.0" fill="#3d444c"/>
+<rect x="230.0" y="63.0" width="60.0" height="60.0" rx="6.0" fill="#0d0d0d"/>
+<text x="260.0" y="93.0" font-family="DejaVu Sans Mono" font-size="10" fill="#ffffff" text-anchor="middle">RP2040</text>
+<text x="260.0" y="133.0" font-family="DejaVu Sans Mono" font-size="13" fill="#ffffff" text-anchor="middle" font-weight="bold">SPIDriver</text>
+<circle cx="22.0" cy="123.0" r="6" fill="#155736"/>
+<circle cx="508.0" cy="123.0" r="6" fill="#155736"/>
+<rect x="22.0" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="29.5" y="220.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">1</text>
+<text x="29.5" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">GP0</text>
+<rect x="47.4" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="54.9" y="220.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">2</text>
+<text x="54.9" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">GP1</text>
+<rect x="72.8" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#7d8a80" stroke="#00000055" stroke-width="1"/>
+<text x="80.3" y="220.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">3</text>
+<text x="80.3" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#7d8a80" text-anchor="middle" font-weight="bold">GND</text>
+<text x="80.3" y="208.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#7d8a80" text-anchor="middle" font-weight="bold">GND</text>
+<rect x="98.2" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#46a0f0" stroke="#00000055" stroke-width="1"/>
+<text x="105.7" y="220.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">4</text>
+<text x="105.7" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#46a0f0" text-anchor="middle" font-weight="bold">GP2</text>
+<text x="105.7" y="208.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#46a0f0" text-anchor="middle" font-weight="bold">SCK</text>
+<rect x="123.6" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#46a0f0" stroke="#00000055" stroke-width="1"/>
+<text x="131.1" y="220.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">5</text>
+<text x="131.1" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#46a0f0" text-anchor="middle" font-weight="bold">GP3</text>
+<text x="131.1" y="208.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#46a0f0" text-anchor="middle" font-weight="bold">MOSI</text>
+<rect x="149.0" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#46a0f0" stroke="#00000055" stroke-width="1"/>
+<text x="156.5" y="220.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">6</text>
+<text x="156.5" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#46a0f0" text-anchor="middle" font-weight="bold">GP4</text>
+<text x="156.5" y="208.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#46a0f0" text-anchor="middle" font-weight="bold">DC</text>
+<rect x="174.4" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#46a0f0" stroke="#00000055" stroke-width="1"/>
+<text x="181.9" y="220.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">7</text>
+<text x="181.9" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#46a0f0" text-anchor="middle" font-weight="bold">GP5</text>
+<text x="181.9" y="208.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#46a0f0" text-anchor="middle" font-weight="bold">CS</text>
+<rect x="199.8" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#7d8a80" stroke="#00000055" stroke-width="1"/>
+<text x="207.3" y="220.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">8</text>
+<text x="207.3" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#7d8a80" text-anchor="middle" font-weight="bold">GND</text>
+<text x="207.3" y="208.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#7d8a80" text-anchor="middle" font-weight="bold">GND</text>
+<rect x="225.2" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#e05fd0" stroke="#00000055" stroke-width="1"/>
+<text x="232.7" y="220.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">9</text>
+<text x="232.7" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#e05fd0" text-anchor="middle" font-weight="bold">GP6</text>
+<text x="232.7" y="208.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#e05fd0" text-anchor="middle" font-weight="bold">A</text>
+<rect x="250.6" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#e05fd0" stroke="#00000055" stroke-width="1"/>
+<text x="258.1" y="220.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">10</text>
+<text x="258.1" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#e05fd0" text-anchor="middle" font-weight="bold">GP7</text>
+<text x="258.1" y="208.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#e05fd0" text-anchor="middle" font-weight="bold">B</text>
+<rect x="276.0" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#f0a92e" stroke="#00000055" stroke-width="1"/>
+<text x="283.5" y="220.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">11</text>
+<text x="283.5" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#f0a92e" text-anchor="middle" font-weight="bold">GP8</text>
+<text x="283.5" y="208.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#f0a92e" text-anchor="middle" font-weight="bold">MISO</text>
+<rect x="301.4" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#f0a92e" stroke="#00000055" stroke-width="1"/>
+<text x="308.9" y="220.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">12</text>
+<text x="308.9" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#f0a92e" text-anchor="middle" font-weight="bold">GP9</text>
+<text x="308.9" y="208.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#f0a92e" text-anchor="middle" font-weight="bold">CS</text>
+<rect x="326.8" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#7d8a80" stroke="#00000055" stroke-width="1"/>
+<text x="334.3" y="220.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">13</text>
+<text x="334.3" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#7d8a80" text-anchor="middle" font-weight="bold">GND</text>
+<text x="334.3" y="208.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#7d8a80" text-anchor="middle" font-weight="bold">GND</text>
+<rect x="352.2" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#f0a92e" stroke="#00000055" stroke-width="1"/>
+<text x="359.7" y="220.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">14</text>
+<text x="359.7" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#f0a92e" text-anchor="middle" font-weight="bold">GP10</text>
+<text x="359.7" y="208.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#f0a92e" text-anchor="middle" font-weight="bold">SCK</text>
+<rect x="377.6" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#f0a92e" stroke="#00000055" stroke-width="1"/>
+<text x="385.1" y="220.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">15</text>
+<text x="385.1" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#f0a92e" text-anchor="middle" font-weight="bold">GP11</text>
+<text x="385.1" y="208.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#f0a92e" text-anchor="middle" font-weight="bold">MOSI</text>
+<rect x="403.0" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="410.5" y="220.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">16</text>
+<text x="410.5" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">GP12</text>
+<rect x="428.4" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="435.9" y="220.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">17</text>
+<text x="435.9" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">GP13</text>
+<rect x="453.8" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#7d8a80" stroke="#00000055" stroke-width="1"/>
+<text x="461.3" y="220.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">18</text>
+<text x="461.3" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#7d8a80" text-anchor="middle" font-weight="bold">GND</text>
+<text x="461.3" y="208.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#7d8a80" text-anchor="middle" font-weight="bold">GND</text>
+<rect x="479.2" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="486.7" y="220.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">19</text>
+<text x="486.7" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">GP14</text>
+<rect x="504.6" y="210.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="512.1" y="220.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">20</text>
+<text x="512.1" y="198.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">GP15</text>
+<rect x="22.0" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#e2574c" stroke="#00000055" stroke-width="1"/>
+<text x="29.5" y="26.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">40</text>
+<text x="29.5" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#e2574c" text-anchor="middle" font-weight="bold">VBUS</text>
+<text x="29.5" y="59.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#e2574c" text-anchor="middle" font-weight="bold">VBUS</text>
+<rect x="47.4" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="54.9" y="26.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">39</text>
+<text x="54.9" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">VSYS</text>
+<rect x="72.8" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#7d8a80" stroke="#00000055" stroke-width="1"/>
+<text x="80.3" y="26.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">38</text>
+<text x="80.3" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#7d8a80" text-anchor="middle" font-weight="bold">GND</text>
+<text x="80.3" y="59.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#7d8a80" text-anchor="middle" font-weight="bold">GND</text>
+<rect x="98.2" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="105.7" y="26.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">37</text>
+<text x="105.7" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">3V3EN</text>
+<rect x="123.6" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#e2574c" stroke="#00000055" stroke-width="1"/>
+<text x="131.1" y="26.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">36</text>
+<text x="131.1" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#e2574c" text-anchor="middle" font-weight="bold">3V3</text>
+<text x="131.1" y="59.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#e2574c" text-anchor="middle" font-weight="bold">3V3</text>
+<rect x="149.0" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="156.5" y="26.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">35</text>
+<text x="156.5" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">VREF</text>
+<rect x="174.4" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="181.9" y="26.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">34</text>
+<text x="181.9" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">GP28</text>
+<rect x="199.8" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#7d8a80" stroke="#00000055" stroke-width="1"/>
+<text x="207.3" y="26.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">33</text>
+<text x="207.3" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#7d8a80" text-anchor="middle" font-weight="bold">AGND</text>
+<text x="207.3" y="59.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#7d8a80" text-anchor="middle" font-weight="bold">GND</text>
+<rect x="225.2" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#f2d24c" stroke="#00000055" stroke-width="1"/>
+<text x="232.7" y="26.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">32</text>
+<text x="232.7" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#f2d24c" text-anchor="middle" font-weight="bold">GP27</text>
+<text x="232.7" y="59.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#f2d24c" text-anchor="middle" font-weight="bold">CURR</text>
+<rect x="250.6" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#f2d24c" stroke="#00000055" stroke-width="1"/>
+<text x="258.1" y="26.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">31</text>
+<text x="258.1" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#f2d24c" text-anchor="middle" font-weight="bold">GP26</text>
+<text x="258.1" y="59.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#f2d24c" text-anchor="middle" font-weight="bold">VBUS</text>
+<rect x="276.0" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="283.5" y="26.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">30</text>
+<text x="283.5" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">RUN</text>
+<rect x="301.4" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="308.9" y="26.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">29</text>
+<text x="308.9" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">GP22</text>
+<rect x="326.8" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#7d8a80" stroke="#00000055" stroke-width="1"/>
+<text x="334.3" y="26.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">28</text>
+<text x="334.3" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#7d8a80" text-anchor="middle" font-weight="bold">GND</text>
+<text x="334.3" y="59.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#7d8a80" text-anchor="middle" font-weight="bold">GND</text>
+<rect x="352.2" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="359.7" y="26.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">27</text>
+<text x="359.7" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">GP21</text>
+<rect x="377.6" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="385.1" y="26.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">26</text>
+<text x="385.1" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">GP20</text>
+<rect x="403.0" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="410.5" y="26.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">25</text>
+<text x="410.5" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">GP19</text>
+<rect x="428.4" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="435.9" y="26.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">24</text>
+<text x="435.9" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">GP18</text>
+<rect x="453.8" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#7d8a80" stroke="#00000055" stroke-width="1"/>
+<text x="461.3" y="26.0" font-family="DejaVu Sans Mono" font-size="6.5" fill="#101010" text-anchor="middle">23</text>
+<text x="461.3" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#7d8a80" text-anchor="middle" font-weight="bold">GND</text>
+<text x="461.3" y="59.0" font-family="DejaVu Sans Mono" font-size="8.5" fill="#7d8a80" text-anchor="middle" font-weight="bold">GND</text>
+<rect x="479.2" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="486.7" y="26.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">22</text>
+<text x="486.7" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">GP17</text>
+<rect x="504.6" y="16.0" width="15.0" height="20.0" rx="3.0" fill="#d4b26a" stroke="#d4b26a" stroke-width="1"/>
+<text x="512.1" y="26.0" font-family="DejaVu Sans Mono" font-size="7" fill="#5c4a2a" text-anchor="middle">21</text>
+<text x="512.1" y="48.0" font-family="DejaVu Sans Mono" font-size="8" fill="#9db8a5" text-anchor="middle">GP16</text>
+<text x="265.0" y="242.0" font-family="DejaVu Sans" font-size="11.5" fill="#ffffff" text-anchor="middle" font-weight="bold">Raspberry Pi Pico · SPIDriver pinout · top view, USB on the left</text>
+<rect x="16.0" y="262.0" width="14.0" height="12.0" rx="2.0" fill="#46a0f0"/>
+<text x="40.0" y="273.0" font-family="DejaVu Sans Mono" font-size="10.5" fill="#ffffff" text-anchor="start">LCD (SPI0):  SCK (GP2)  MOSI (GP3)  DC (GP4)  CS (GP5)  RESET tied to 3V3</text>
+<rect x="16.0" y="280.0" width="14.0" height="12.0" rx="2.0" fill="#f0a92e"/>
+<text x="40.0" y="291.0" font-family="DejaVu Sans Mono" font-size="10.5" fill="#ffffff" text-anchor="start">target SPI1:  SCK (GP10)  MOSI (GP11)  MISO (GP8)  CS (GP9)</text>
+<rect x="16.0" y="298.0" width="14.0" height="12.0" rx="2.0" fill="#e05fd0"/>
+<text x="40.0" y="309.0" font-family="DejaVu Sans Mono" font-size="10.5" fill="#ffffff" text-anchor="start">aux outputs:  A (GP6)  B (GP7)</text>
+<rect x="16.0" y="316.0" width="14.0" height="12.0" rx="2.0" fill="#f2d24c"/>
+<text x="40.0" y="327.0" font-family="DejaVu Sans Mono" font-size="10.5" fill="#ffffff" text-anchor="start">analog:  VBUS (GP26 / ADC0)  current (GP27 / ADC1)  temp = internal ADC4</text>
+<rect x="16.0" y="334.0" width="14.0" height="12.0" rx="2.0" fill="#e2574c"/>
+<text x="40.0" y="345.0" font-family="DejaVu Sans Mono" font-size="10.5" fill="#ffffff" text-anchor="start">power:  VBUS (pin 40)  3V3 (pin 36)</text>
+<rect x="16.0" y="352.0" width="14.0" height="12.0" rx="2.0" fill="#7d8a80"/>
+<text x="40.0" y="363.0" font-family="DejaVu Sans Mono" font-size="10.5" fill="#ffffff" text-anchor="start">GND</text>
+</svg>

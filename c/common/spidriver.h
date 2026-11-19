@@ -2,6 +2,7 @@
 #define SPIDRIVER_H
 
 #include <stdint.h>
+#include <stddef.h>
 
 #if defined(WIN32)
 #include <windows.h>
@@ -13,7 +14,7 @@ typedef struct {
   int connected;          // Set to 1 when connected
   HANDLE port;
   char      model[16],
-            serial[9];    // Serial number of USB device
+            serial[17];   // Serial number of USB device (RP2040 id = 16 hex)
   uint64_t  uptime;       // time since boot (seconds)
   float     voltage_v,    // USB voltage (Volts)
             current_ma,   // device current (mA)

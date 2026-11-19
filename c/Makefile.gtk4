@@ -1,0 +1,37 @@
+# SPIDriver Linux GUI (GTK4 port of win32gui).
+#
+#   make -f Makefile.gtk4           build build/spidriver-gui
+#   make -f Makefile.gtk4 run       build + launch
+#   make -f Makefile.gtk4 clean
+
+CC = cc
+GTK_CFLAGS = $(shell pkg-config --cflags gtk4)
+GTK_LIBS   = $(shell pkg-config --libs gtk4)
+
+CFLAGS  ?= -O2 -Wall
+CPPFLAGS += -Icommon $(GTK_CFLAGS)
+LDLIBS  += $(GTK_LIBS)
+
+OBJS = build/main.o build/spidriver.o
+
+.PHONY: all run clean
+
+all: build/spidriver-gui
+
+run: build/spidriver-gui
+	./build/spidriver-gui
+
+build:
+	mkdir -p build
+
+build/main.o: linuxgui/main.c common/spidriver.h | build
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+build/spidriver.o: common/spidriver.c common/spidriver.h | build
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+build/spidriver-gui: $(OBJS)
+	$(CC) -o $@ $^ $(LDLIBS)
+
+clean:
+	rm -rf build

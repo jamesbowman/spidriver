@@ -139,6 +139,8 @@ int openSerialPort(const char *portname)
 
   cfmakeraw(&Settings);
   Settings.c_cc[VMIN] = 1;
+  Settings.c_cc[VTIME] = 5; /* 0.5 s read timeout so probing a
+                              wrong port cannot block forever */
   if (tcsetattr(fd, TCSANOW, &Settings) != 0) {
     perror("Serial settings");
     return -1;
@@ -152,9 +154,15 @@ size_t readFromSerialPort(int fd, char *b, size_t s)
   size_t n, t;
   t = 0;
   while (t < s) {
-    n = read(fd, b + t, s);
-    if (n > 0)
-      t += n;
+    n = read(fd, b + t, s - t);
+    if (n == (size_t)-1) {
+      if (errno == EINTR)
+        continue;
+      break;
+    }
+    if (n == 0)
+      break; /* timeout or EOF */
+    t += n;
   }
 #ifdef VERBOSE
   printf(" READ %d %d: ", (int)s, (int)n);
@@ -250,8 +258,14 @@ void spi_connect(SPIDriver *sd, const char* portname)
     writeToSerialPort(sd->port, tx, 2);
     char rx[1];
     int n = readFromSerialPort(sd->port, rx, 1);
-    if ((n != 1) || (rx[0] != tests[i]))
+    if ((n != 1) || (rx[0] != tests[i])) {
+#if defined(WIN32)
+      CloseHandle(sd->port);
+#else
+      close(sd->port);
+#endif
       return;
+    }
   }
 
   sd->connected = 1;
@@ -268,7 +282,7 @@ void spi_getstatus(SPIDriver *sd)
   bytesRead = readFromSerialPort(sd->port, readbuffer, 80);
   readbuffer[bytesRead] = 0;
   // printf("%d Bytes were read: %.*s\n", bytesRead, bytesRead, readbuffer);
-  sscanf(readbuffer, "[%15s %8s %" SCNu64 " %f %f %f %u %u %u %x ]",
+  sscanf(readbuffer, "[%15s %16s %" SCNu64 " %f %f %f %u %u %u %x ]",
     sd->model,
     sd->serial,
     &sd->uptime,

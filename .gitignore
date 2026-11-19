@@ -1,5 +1,8 @@
 __pycache__
 *.pyc
 /c/build/
+/c/build-gtk4/
+/c/compile_commands.json
 /c/bin/
 /c/obj/
+/python/build/
